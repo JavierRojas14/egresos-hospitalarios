@@ -27,3 +27,21 @@ Ahora, para el análisis de los Egresos se necesita una base de datos que conten
 información:
 
 Hospital|Región|Comuna|Lugar de derivación (de donde viene el paciente)|Edad del paciente|Sexo del paciente|Previsión del Paciente|Diagnóstico
+-|-|-|-|-|-|-|-
+
+# Pasos del análisis
+
+1. En primer lugar, se debe elegir el problema de salud a estudiar y filtrar la base de datos
+2. Con la base filtrada, se debe obtener el largo del DataFrame (el indice 0 del df.shape). 
+Con esto se obtendrá la cantidad de casos del problema médico a nivel nacional, y sin ninguna
+desagregación
+3. Para obtener la cantidad de casos por región, realizar un df.groupby(by='Región').count() o .sum().
+Con esto, se obtendrán los datos de casos por región. Se puede hacer un gráfico de geomapa
+4. Para obtener la cantidad de casos por edad, realizar un df.groupby(by='Edad').count() o .sum().
+Con esto, se obtendrán los datos de casos por edad. Se puede hacer un gráfico de distribución.
+5. Para obtener la cantidad de casos por sexo, realizar un df.groupby(by='sexo').count() o .sum().
+Con esto, se obtendrán los datos de casos por sexo. Se puede hacer un gráfico de distribución.
+6. Para obtener la cantidad de casos por prevision, realizar un df.groupby(by='prevision').count() o .sum().
+Con esto, se obtendrán los datos de casos por prevision. Se puede hacer un gráfico de distribución.
+
+7. Para realizar el análisis del Tórax, se debe filtrar el DataFrame solamente para el Tórax. Luego, se deben seguir los pasos 2 a 6.
