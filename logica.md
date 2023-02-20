@@ -21,3 +21,9 @@ los otros Hospitales (Somos referencia?)
 - Cuál es el grupo etáreo que mayoritariamente llega al Tórax?
 - De cuántas procedencias llegan pacientes al Hospital del Tórax?
 
+# Bases de Datos
+
+Ahora, para el análisis de los Egresos se necesita una base de datos que contenga la siguiente
+información:
+
+Hospital|Región|Comuna|Lugar de derivación (de donde viene el paciente)|Edad del paciente|Sexo del paciente|Previsión del Paciente|Diagnóstico
