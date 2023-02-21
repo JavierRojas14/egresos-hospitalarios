@@ -18,6 +18,15 @@ ARCHIVOS = {'2013': RUTA_2013,
 
 
 def convertir_ints_a_strs(valor):
+    '''Función que convierte los valores de la columna Región de Los Egresos Hospitalarios. Esta
+    columna tiene ints y objects, y los consolida solamente a objects
+
+    :param valor: Es uno de los valores de la columna Región de los egresos Hospitalarios
+    :type valor: str/int
+
+    :returns: El valor convertido a string/object
+    :rtype: str
+    '''
     if isinstance(valor, int):
         if len(str(valor)) == 1:
             return f'0{valor}'
@@ -28,6 +37,12 @@ def convertir_ints_a_strs(valor):
 
 
 def leer_anios_egresos():
+    '''Función que lee todos los DataFrames de los egresos contenidos en la variable global 
+    ARCHIVOS. Además, convierte la columna REGION_RESIDENCIA a strings.
+
+    :returns: Un diccionario con todos los archivos que estén contenido en la variable ARCHIVOS
+    :rtype: dict
+    '''
     dfs = {}
     for anio, ruta in ARCHIVOS.items():
         dfs[anio] = pd.read_csv(ruta, delimiter=';', encoding='latin-1', on_bad_lines='skip')
