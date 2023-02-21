@@ -30,6 +30,46 @@ información:
 Hospital|Región|Comuna|Lugar de derivación (de donde viene el paciente)|Edad del paciente|Sexo del paciente|Previsión del Paciente|Diagnóstico
 -|-|-|-|-|-|-|-
 
+## Variables presentes
+
+- ID_PACIENTE: 
+- ESTABLECIMIENTO_SALUD:  
+- GLOSA_ESTABLECIMIENTO_SALUD:  
+- PERTENENCIA_ESTABLECIMIENTO_SALUD:  
+- SEREMI:  
+- SERVICIO_DE_SALUD:  
+- SEXO:  
+- FECHA_NACIMIENTO:  
+- EDAD_CANT:  
+- TIPO_EDAD:  
+- EDAD_A_OS:  
+- PUEBLO_ORIGINARIO:  
+- PAIS_ORIGEN:  
+- GLOSA_PAIS_ORIGEN:  
+- COMUNA_RESIDENCIA:  
+- GLOSA_COMUNA_RESIDENCIA:  
+- REGION_RESIDENCIA:  
+- GLOSA_REGION_RESIDENCIA:  
+- PREVISION:  
+- BENEFICIARIO:  
+- MODALIDAD:  
+- PROCEDENCIA:  
+- ANO_EGRESO:  
+- FECHA_EGRESO:  
+- AREA_FUNCIONAL_EGRESO:  
+- DIAS_ESTADA:  
+- CONDICION_EGRESO: Es una variable binaria. Tiene solamente valores 1 y 2 (ints)
+- DIAG1: Es el primer diagnóstico del paciente. Está en formato CIE-10, con un nivel de desglose hasta .X (Ej: O80.9). Carece del punto.
+- GLOSA_DIAG1: Es el primer diagnóstico del paciente. Es la codificación del código CIE-10 en palabras.
+- DIAG2:  
+- GLOSA_DIAG2:  
+- INTERV_Q:  
+- CODIGO_INTERV_Q_PPAL:  
+- GLOSA_INTERV_Q_PPAL:  
+- PROCED:  
+- CODIGO_PROCED_PPAL:  
+- GLOSA_PROCED_PPAL
+
 # Pasos del análisis
 
 1. En primer lugar, se debe elegir el problema de salud a estudiar y filtrar la base de datos
@@ -71,4 +111,5 @@ Esto se puede corroborar:
 
 Si los dos pasos anteriores se cumplen, entonces se puede decir que ambas bases de datos 
 son iguales. 
+
 
