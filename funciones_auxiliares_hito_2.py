@@ -142,9 +142,12 @@ def graficar_distribucion_variable_categorica(serie_categorica, nombre_grafico):
     print(nombre_grafico)
     print(serie_conteo)
 
-    sns.countplot(y=serie_categorica, order=serie_conteo.index)
-    plt.title(nombre_grafico)
-    plt.show()
+    if serie_conteo.shape[0] < 100:
+        sns.countplot(y=serie_categorica, order=serie_conteo.index)
+        plt.title(nombre_grafico)
+        plt.show()
+
+    print('--------------------------------------------------------------\n')
 
 
 def analizar_dist_todas_las_variables_categoricas(df_categoricas):
