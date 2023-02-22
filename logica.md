@@ -32,43 +32,43 @@ Hospital|Región|Comuna|Lugar de derivación (de donde viene el paciente)|Edad d
 
 ## Variables presentes
 
-- ID_PACIENTE: 
+- ID_PACIENTE: Es el identificador de pacientes.
 - ESTABLECIMIENTO_SALUD: Es el establecimiento de salud de donde viene el Egreso. Esta en formato código.
 - GLOSA_ESTABLECIMIENTO_SALUD: Corresponde al establecimiento de donde viene el Egreso. Pueden ser establecimientos privados o públicos. Hay 337 instituciones en 2013.
 - PERTENENCIA_ESTABLECIMIENTO_SALUD: Es una variable binaria, que indica si es el establecimiento de salud pertenece al Servicio Nacional de Salud. Si es si, entonces es una institución pública. En caso contrario, es una institución privada.
-- SEREMI:  
-- SERVICIO_DE_SALUD:  
-- SEXO:  
-- FECHA_NACIMIENTO:  
-- EDAD_CANT:  
-- TIPO_EDAD:  
-- EDAD_A_OS:  
-- PUEBLO_ORIGINARIO:  
-- PAIS_ORIGEN:  
-- GLOSA_PAIS_ORIGEN:  
-- COMUNA_RESIDENCIA:  
-- GLOSA_COMUNA_RESIDENCIA:  
-- REGION_RESIDENCIA:  
-- GLOSA_REGION_RESIDENCIA:  
-- PREVISION:  
-- BENEFICIARIO:  
-- MODALIDAD:  
-- PROCEDENCIA:  
-- ANO_EGRESO:  
-- FECHA_EGRESO:  
-- AREA_FUNCIONAL_EGRESO:  
-- DIAS_ESTADA:  
-- CONDICION_EGRESO: Es una variable binaria. Tiene solamente valores 1 y 2 (ints)
+- SEREMI: Es una variable numérica discreta. Va del 1 al 16, y codifica la SEREMI a la que pertenece el establecimiento de salud.
+- SERVICIO_DE_SALUD: Es una variable numérica discreta. Va del 1 al 33, y codifica el Servicio de Salud al que pertenece el egreso.
+- SEXO: Es una variable numérica discreta. Tiene valores 1, 2, 3 y 9. No se que codifica.
+- FECHA_NACIMIENTO: Fecha en la que nació el paciente.
+- EDAD_CANT: Es la cantidad de años que presenta el paciente del egreso. 
+- TIPO_EDAD: Es una variable numérica discreta. Va del 1 al 4. No se que codifica
+- EDAD_A_OS: Es la cantidad de años, pero con los que tienen 1 año les pone 0 (creo).
+- PUEBLO_ORIGINARIO: Es una variable numérica discreta. Codifica para el pueblo originario que se identifica el paciente del egreso
+- PAIS_ORIGEN: Es la codificación de GLOSA_PAIS_ORIGEN (Aunque tiene valores distintos)
+- GLOSA_PAIS_ORIGEN: Es el país de nacimiento del paciente del egreso. 
+- COMUNA_RESIDENCIA: Es el código de la comuna de residencia en donde reside el pacientel del egreso.
+- GLOSA_COMUNA_RESIDENCIA: Es la comuna de residencia en donde reside el pacientel del egreso. Son las comunas presentes en todo el país.
+- REGION_RESIDENCIA: Es el código de la región donde reside el paciente del egreso.
+- GLOSA_REGION_RESIDENCIA: Es la región donde reside el paciente del egreso. 
+- PREVISION: Es el código de la previsión que tiene el paciente.
+- BENEFICIARIO: Es la letra de FONASA que tiene el paciente
+- MODALIDAD: No se que es, pero tiene valor 1 o 2.
+- PROCEDENCIA: No se que es, pero tiene valor 1, 3, 4 o 5.
+- ANO_EGRESO: Es el año en que egreso. Cada archivo tiene su valor.
+- FECHA_EGRESO: Fecha en la que egreso el paciente.
+- AREA_FUNCIONAL_EGRESO: No se que es, pero tiene 80 valores numéricos discretos.
+- DIAS_ESTADA: Son la cantidad de días que estuvo hospitalizado el paciente.
+- CONDICION_EGRESO: No se que es. Es una variable binaria. Tiene solamente valores 1 y 2 (ints)
 - DIAG1: Es el primer diagnóstico del paciente. Está en formato CIE-10, con un nivel de desglose hasta .X (Ej: O80.9). Carece del punto.
 - GLOSA_DIAG1: Es el primer diagnóstico del paciente. Es la codificación del código CIE-10 en palabras.
-- DIAG2:  
-- GLOSA_DIAG2:  
-- INTERV_Q:  
-- CODIGO_INTERV_Q_PPAL:  
-- GLOSA_INTERV_Q_PPAL:  
-- PROCED:  
-- CODIGO_PROCED_PPAL:  
-- GLOSA_PROCED_PPAL
+- DIAG2: Es el segundo diagnóstico del paciente. Está en formato CIE-10, con un nivel de desglose hasta .X (Ej: O80.9). Carece del punto.
+- GLOSA_DIAG2: Es el segundo diagnóstico del paciente. Es la codificación del código CIE-10 en palabras.
+- INTERV_Q: Es una variable binaria. Creo que indica si es que el paciente tuvo intervención quirúrgica o no.
+- CODIGO_INTERV_Q_PPAL:  Es el código de la intervención quirúrgica hecha al paciente.
+- GLOSA_INTERV_Q_PPAL: Es la intervención quirúrgica hecha al paciente.
+- PROCED: No tiene valores
+- CODIGO_PROCED_PPAL:  No tiene valores
+- GLOSA_PROCED_PPAL: No tiene valor
 
 # Pasos del análisis
 
