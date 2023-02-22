@@ -33,9 +33,9 @@ Hospital|Región|Comuna|Lugar de derivación (de donde viene el paciente)|Edad d
 ## Variables presentes
 
 - ID_PACIENTE: 
-- ESTABLECIMIENTO_SALUD:  
-- GLOSA_ESTABLECIMIENTO_SALUD:  
-- PERTENENCIA_ESTABLECIMIENTO_SALUD:  
+- ESTABLECIMIENTO_SALUD: Es el establecimiento de salud de donde viene el Egreso. Esta en formato código.
+- GLOSA_ESTABLECIMIENTO_SALUD: Corresponde al establecimiento de donde viene el Egreso. Pueden ser establecimientos privados o públicos. Hay 337 instituciones en 2013.
+- PERTENENCIA_ESTABLECIMIENTO_SALUD: Es una variable binaria, que indica si es el establecimiento de salud pertenece al Servicio Nacional de Salud. Si es si, entonces es una institución pública. En caso contrario, es una institución privada.
 - SEREMI:  
 - SERVICIO_DE_SALUD:  
 - SEXO:  
