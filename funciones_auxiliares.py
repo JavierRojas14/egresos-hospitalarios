@@ -50,3 +50,25 @@ def leer_anios_egresos():
             convertir_ints_a_strs)
 
     return dfs
+
+
+def analizar_ranking_diagnosticos_hospital(df, glosa_hospital):
+    df_hospital = df.query('GLOSA_ESTABLECIMIENTO_SALUD == @glosa_hospital')
+    diagnosticos_hospital = df_hospital.GLOSA_DIAG1.value_counts()
+
+    resultados_hospital = []
+    for nombre_diagnostico, cantidad_hospital in diagnosticos_hospital.items():
+        df_total = df.query('GLOSA_DIAG1 == @nombre_diagnostico')
+        cantidad_total = df_total.shape[0]
+
+        porcentaje_hospital = cantidad_hospital/cantidad_total
+
+        resultados_hospital.append([nombre_diagnostico, cantidad_total, cantidad_hospital,
+                                    porcentaje_hospital])
+
+    ranking_hospital = pd.DataFrame(resultados_hospital, columns=['GLOSA_DIAG1', 'TOTAL_NACIONAL',
+                                                                  'TOTAL_HOSPITAL', 'PORCENTAJE_ATENDIMIENTO'])
+
+    ranking_hospital = ranking_hospital.sort_values(by='PORCENTAJE_ATENDIMIENTO', ascending=False)
+
+    return ranking_hospital
