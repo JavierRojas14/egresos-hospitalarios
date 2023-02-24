@@ -1,5 +1,7 @@
 import pandas as pd
 
+import matplotlib.pyplot as plt
+
 RUTA_2013 = 'egresos/Egresos_Hospitalarios_2013/Egresos_Hospitalarios_2013.csv'
 RUTA_2014 = 'egresos/Egresos_Hospitalarios_2014-20230216T134804Z-001/Egresos_Hospitalarios_2014/Egresos_Hospitalarios_2014.csv'
 RUTA_2015 = 'egresos/Egresos_Hospitalarios_2015-20230216T124219Z-001/Egresos_Hospitalarios_2015/Egresos_Hospitalarios_2015.csv'
@@ -72,3 +74,18 @@ def analizar_ranking_diagnosticos_hospital(df, glosa_hospital):
     ranking_hospital = ranking_hospital.sort_values(by='PORCENTAJE_ATENDIMIENTO', ascending=False)
 
     return ranking_hospital
+
+
+def analisis_grafico_anidado_por_anio(df, variable_a_agrupar):
+    agrupado = df.groupby(by=['ANO_EGRESO'])[variable_a_agrupar].value_counts()
+    agrupado_porcentaje = df.groupby(by=['ANO_EGRESO'])[variable_a_agrupar].value_counts('%')
+    juntas = pd.concat([agrupado, agrupado_porcentaje], axis=1)
+    juntas.columns = ['CANTIDAD', 'PORCENTAJE']
+
+    agrupado_largo = agrupado.unstack()
+    agrupado_largo.plot(kind='bar', stacked=True)
+
+    display(juntas)
+    plt.show()
+
+    return juntas
