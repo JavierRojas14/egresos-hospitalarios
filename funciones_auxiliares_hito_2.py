@@ -92,6 +92,17 @@ def separar_df_a_numericas_categoricas(df):
     return numericas, categoricas
 
 
+def graficar_a_lo_largo_del_tiempo(serie_tiempo):
+    '''Funcion que grafica una serie de tiempo, mostrando la media de valores
+
+    :param serie_tiempo: Es la serie que se quiere graficar
+    :type serie_tiempo: pd.Series
+    '''
+    serie_tiempo.plot(kind='bar')
+    plt.axhline(serie_tiempo.mean(), color='tomato')
+    plt.show()
+
+
 def graficar_distribucion_variable_numerica(serie_numerica, nombre_grafico):
     '''Esta funcion permite graficar la distribución de una variable numérica con un histograma
     y un gráfico de cajas y bigotes. Además, muestra la media en el histograma
