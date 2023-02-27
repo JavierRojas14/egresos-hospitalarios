@@ -83,7 +83,7 @@ def analisis_grafico_anidado_por_anio(df, variable_a_agrupar):
     juntas.columns = ['CANTIDAD', 'PORCENTAJE']
 
     agrupado_largo = agrupado.unstack()
-    agrupado_largo.plot(kind='bar', stacked=True)
+    agrupado_largo.plot(kind='bar')
 
     display(juntas)
     plt.show()
