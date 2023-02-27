@@ -54,6 +54,17 @@ def leer_anios_egresos():
     return dfs
 
 
+def graficar_a_lo_largo_del_tiempo(serie_tiempo):
+    '''Funcion que grafica una serie de tiempo, mostrando la media de valores
+
+    :param serie_tiempo: Es la serie que se quiere graficar
+    :type serie_tiempo: pd.Series
+    '''
+    serie_tiempo.plot(kind='bar')
+    plt.axhline(serie_tiempo.mean(), color='tomato')
+    plt.show()
+
+
 def analizar_ranking_diagnosticos_hospital(df, glosa_hospital):
     df_hospital = df.query('GLOSA_ESTABLECIMIENTO_SALUD == @glosa_hospital')
     diagnosticos_hospital = df_hospital.GLOSA_DIAG1.value_counts()
