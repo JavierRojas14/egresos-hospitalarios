@@ -87,6 +87,15 @@ def analizar_ranking_diagnosticos_hospital(df, glosa_hospital):
     return ranking_hospital
 
 
+def obtener_resumen_por_nivel(resumen_por_anio_de_variable, variable_analizada):
+    df_variable_por_anio = resumen_por_anio_de_variable.reset_index(level=variable_analizada)
+    for valor in df_variable_por_anio[variable_analizada].unique():
+        mask_valor = df_variable_por_anio[variable_analizada] == valor
+        df_del_valor = df_variable_por_anio[mask_valor].drop(columns=variable_analizada)
+        print(f'El resumen de {valor} es:\n')
+        display(df_del_valor.describe())
+
+
 def analisis_grafico_anidado_por_anio(df, variable_a_agrupar):
     agrupado = df.groupby(by=['ANO_EGRESO'])[variable_a_agrupar].value_counts()
     agrupado_porcentaje = df.groupby(by=['ANO_EGRESO'])[variable_a_agrupar].value_counts('%')
@@ -98,5 +107,7 @@ def analisis_grafico_anidado_por_anio(df, variable_a_agrupar):
 
     display(juntas)
     plt.show()
+
+    obtener_resumen_por_nivel(juntas, variable_a_agrupar)
 
     return juntas
