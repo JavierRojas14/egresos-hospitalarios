@@ -56,8 +56,8 @@ def leer_anios_egresos():
     return dfs
 
 
-def graficar_a_lo_largo_del_tiempo(serie_tiempo):
-    '''Funcion que grafica una serie de tiempo, mostrando la media de valores
+def graficar_conteo_valores(serie_tiempo):
+    '''Funcion que grafica un conteo de los valores distintos de una variable
 
     :param serie_tiempo: Es la serie que se quiere graficar
     :type serie_tiempo: pd.Series
@@ -67,12 +67,12 @@ def graficar_a_lo_largo_del_tiempo(serie_tiempo):
     plt.show()
 
 
-def analizar_cantidad_egresos(df):
-    egresos = df['ANO_EGRESO'].value_counts()
-    display(egresos.to_frame())
-    display(egresos.describe().to_frame())
-    graficar_a_lo_largo_del_tiempo(egresos.sort_index())
-    aux2.graficar_distribucion_variable_numerica(egresos.reset_index(drop=True), 'egresos')
+def analizar_conteo_de_variable(df, variable):
+    conteo = df[variable].value_counts()
+    display(conteo.to_frame())
+    display(conteo.describe().to_frame())
+    graficar_conteo_valores(conteo.sort_index())
+    aux2.graficar_distribucion_variable_numerica(conteo.reset_index(drop=True), 'egresos')
 
 
 def analizar_ranking_diagnosticos_hospital(df, glosa_hospital):
