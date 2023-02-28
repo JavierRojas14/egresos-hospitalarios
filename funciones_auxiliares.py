@@ -2,6 +2,8 @@ import pandas as pd
 
 import matplotlib.pyplot as plt
 
+import funciones_auxiliares_hito_2 as aux2
+
 RUTA_2013 = 'egresos/Egresos_Hospitalarios_2013/Egresos_Hospitalarios_2013.csv'
 RUTA_2014 = 'egresos/Egresos_Hospitalarios_2014-20230216T134804Z-001/Egresos_Hospitalarios_2014/Egresos_Hospitalarios_2014.csv'
 RUTA_2015 = 'egresos/Egresos_Hospitalarios_2015-20230216T124219Z-001/Egresos_Hospitalarios_2015/Egresos_Hospitalarios_2015.csv'
@@ -63,6 +65,14 @@ def graficar_a_lo_largo_del_tiempo(serie_tiempo):
     serie_tiempo.plot(kind='bar')
     plt.axhline(serie_tiempo.mean(), color='tomato')
     plt.show()
+
+
+def analizar_cantidad_egresos(df):
+    egresos = df['ANO_EGRESO'].value_counts()
+    display(egresos.to_frame())
+    display(egresos.describe().to_frame())
+    graficar_a_lo_largo_del_tiempo(egresos.sort_index())
+    aux2.graficar_distribucion_variable_numerica(egresos.reset_index(drop=True), 'egresos')
 
 
 def analizar_ranking_diagnosticos_hospital(df, glosa_hospital):
