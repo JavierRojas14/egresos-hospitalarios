@@ -98,6 +98,11 @@ def analizar_ranking_diagnosticos_hospital(df, glosa_hospital):
 
 
 def obtener_resumen_por_nivel(resumen_por_anio_de_variable, variable_analizada):
+    '''Función que describe describe cada uno de los los subgrupos presentes
+    en una variable de un DataFrame
+
+    :param resumen_por_anio_de_variable:
+    '''
     df_variable_por_anio = resumen_por_anio_de_variable.reset_index(level=variable_analizada)
     for valor in df_variable_por_anio[variable_analizada].unique():
         mask_valor = df_variable_por_anio[variable_analizada] == valor
@@ -106,7 +111,18 @@ def obtener_resumen_por_nivel(resumen_por_anio_de_variable, variable_analizada):
         display(df_del_valor.describe())
 
 
-def analisis_grafico_anidado_por_anio(df, variable_a_agrupar):
+def analisis_variable_en_el_tiempo(df, variable_a_agrupar):
+    '''Función que permite analizar una variable de un DataFrame a lo largo del tiempo.
+    El DataFrame debe tener una variable llamada "ANO_EGRESO", que corresponde a una variable
+    de tiempo
+
+    :param df: Es el DataFrame que se quiere analizar
+    :type df: pd.DataFrame
+
+    :param variable_a_agrupar: Es la variable del DataFrame que se quiere analizar a lo 
+    largo del tiempo
+    :type variable_a_agrupar: str
+    '''
     agrupado = df.groupby(by=['ANO_EGRESO'])[variable_a_agrupar].value_counts()
     agrupado_porcentaje = df.groupby(by=['ANO_EGRESO'])[variable_a_agrupar].value_counts('%')
     juntas = pd.concat([agrupado, agrupado_porcentaje], axis=1)
