@@ -137,3 +137,18 @@ def analisis_variable_en_el_tiempo(df, variable_a_agrupar):
     obtener_resumen_por_nivel(juntas, variable_a_agrupar)
 
     return juntas
+
+
+def cambiar_cie_con_x(valor):
+    if len(valor) == 3:
+        return f'{valor}X'
+
+    return valor
+
+
+def obtener_diccionario_cie():
+    cie = pd.read_excel('egresos/CIE-10.xlsx')
+    cie['CodigoSinPunto'] = cie['Código'].str.replace('.', '', regex=False)
+    cie['CodigoSinPunto'] = cie['CodigoSinPunto'].apply(cambiar_cie_con_x)
+
+    return cie
