@@ -11,6 +11,7 @@ RUTA_2016 = 'input/Egresos_Hospitalarios_2016-20230216T124117Z-001/Egresos_Hospi
 RUTA_2017 = 'input/Egresos_Hospitalarios_2017-20230216T123902Z-001/Egresos_Hospitalarios_2017/Egresos_Hospitalarios_2017.csv'
 RUTA_2018 = 'input/Egresos_Hospitalarios_2018-20230216T123758Z-001/Egresos_Hospitalarios_2018/Egresos_Hospitalarios_2018.csv'
 RUTA_2019 = 'input/Egresos_Hospitalarios_2019-20230216T123639Z-001/Egresos_Hospitalarios_2019/Egresos_Hospitalarios_2019.csv'
+RUTA_CIE = 'input/CIE-10.xlsx'
 
 ARCHIVOS = {'2013': RUTA_2013,
             '2014': RUTA_2014,
@@ -146,9 +147,18 @@ def cambiar_cie_con_x(valor):
     return valor
 
 
+def tratar_columna_codigo(df):
+    tmp = df.copy()
+
+    tmp['CodigoSinPunto'] = tmp['Código'].str.replace('.', '', regex=False)
+    tmp['CodigoSinPunto'] = tmp['CodigoSinPunto'].apply(cambiar_cie_con_x)
+
+    return tmp
+
+
 def obtener_diccionario_cie():
-    cie = pd.read_excel('egresos/CIE-10.xlsx')
-    cie['CodigoSinPunto'] = cie['Código'].str.replace('.', '', regex=False)
-    cie['CodigoSinPunto'] = cie['CodigoSinPunto'].apply(cambiar_cie_con_x)
+    cie = pd.read_excel(RUTA_CIE)
+
+    cie = tratar_columna_codigo(cie)
 
     return cie
