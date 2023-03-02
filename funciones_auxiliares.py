@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 
 import funciones_auxiliares_hito_2 as aux2
 
-RUTA_2013 = 'egresos/Egresos_Hospitalarios_2013/Egresos_Hospitalarios_2013.csv'
-RUTA_2014 = 'egresos/Egresos_Hospitalarios_2014-20230216T134804Z-001/Egresos_Hospitalarios_2014/Egresos_Hospitalarios_2014.csv'
-RUTA_2015 = 'egresos/Egresos_Hospitalarios_2015-20230216T124219Z-001/Egresos_Hospitalarios_2015/Egresos_Hospitalarios_2015.csv'
-RUTA_2016 = 'egresos/Egresos_Hospitalarios_2016-20230216T124117Z-001/Egresos_Hospitalarios_2016/Egresos_Hospitalarios_2016.csv'
-RUTA_2017 = 'egresos/Egresos_Hospitalarios_2017-20230216T123902Z-001/Egresos_Hospitalarios_2017/Egresos_Hospitalarios_2017.csv'
-RUTA_2018 = 'egresos/Egresos_Hospitalarios_2018-20230216T123758Z-001/Egresos_Hospitalarios_2018/Egresos_Hospitalarios_2018.csv'
-RUTA_2019 = 'egresos/Egresos_Hospitalarios_2019-20230216T123639Z-001/Egresos_Hospitalarios_2019/Egresos_Hospitalarios_2019.csv'
+RUTA_2013 = 'input/Egresos_Hospitalarios_2013/Egresos_Hospitalarios_2013.csv'
+RUTA_2014 = 'input/Egresos_Hospitalarios_2014-20230216T134804Z-001/Egresos_Hospitalarios_2014/Egresos_Hospitalarios_2014.csv'
+RUTA_2015 = 'input/Egresos_Hospitalarios_2015-20230216T124219Z-001/Egresos_Hospitalarios_2015/Egresos_Hospitalarios_2015.csv'
+RUTA_2016 = 'input/Egresos_Hospitalarios_2016-20230216T124117Z-001/Egresos_Hospitalarios_2016/Egresos_Hospitalarios_2016.csv'
+RUTA_2017 = 'input/Egresos_Hospitalarios_2017-20230216T123902Z-001/Egresos_Hospitalarios_2017/Egresos_Hospitalarios_2017.csv'
+RUTA_2018 = 'input/Egresos_Hospitalarios_2018-20230216T123758Z-001/Egresos_Hospitalarios_2018/Egresos_Hospitalarios_2018.csv'
+RUTA_2019 = 'input/Egresos_Hospitalarios_2019-20230216T123639Z-001/Egresos_Hospitalarios_2019/Egresos_Hospitalarios_2019.csv'
 
 ARCHIVOS = {'2013': RUTA_2013,
             '2014': RUTA_2014,
