@@ -85,6 +85,10 @@ def analizar_ranking_diagnosticos_hospital(df, glosa_hospital):
         df_total = df.query('GLOSA_DIAG1 == @nombre_diagnostico')
         cantidad_total = df_total.shape[0]
 
+        df_publico_diagnostico = df.query(
+            'GLOSA_DIAG1 == @nombre_diagnostico and PERTENENCIA_ESTABLECIMIENTO_SALUD == "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS"')
+        cantidad_publico = df_publico_diagnostico.shape[0]
+
         porcentaje_hospital = cantidad_hospital/cantidad_total
 
         resultados_hospital.append([nombre_diagnostico, cantidad_total, cantidad_hospital,
