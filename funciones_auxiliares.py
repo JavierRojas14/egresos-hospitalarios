@@ -191,7 +191,7 @@ def calcular_porcentaje_metrica_por_diagnostico(df, subgrupo_ranking, variable_a
 def obtener_ranking_total(df, agrupar_por, subgrupo_ranking, variable_a_analizar):
     tmp = df.copy()
 
-    df_agrupada = tmp.groupby(agrupar_por).agg(N_Egresos=('TIPO_EDAD', 'sum'),
+    df_agrupada = tmp.groupby(agrupar_por).agg(N_Egresos=('TIPO_EDAD', 'count'),
                                                DIAS_ESTADA_Promedio=('DIAS_ESTADA', 'mean'))
 
     orden_ranking = subgrupo_ranking + variable_a_analizar
