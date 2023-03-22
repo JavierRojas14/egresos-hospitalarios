@@ -15,6 +15,7 @@ ARCHIVOS_A_LEER = [f'input/Egresos_Hospitalarios_{i}.csv' for i in range(LEER_AN
                                                                          LEER_ANIO_FINAL + 1)]
 
 DICT_ENCODE_VARIABLES = {
+    'ID_PACIENTE': 'object',
     'ESTABLECIMIENTO_SALUD': 'Int32',
     'GLOSA_ESTABLECIMIENTO_SALUD': 'category',
     'PERTENENCIA_ESTABLECIMIENTO_SALUD': 'category',
@@ -36,7 +37,7 @@ DICT_ENCODE_VARIABLES = {
     'ANO_EGRESO': 'Int16',
     'FECHA_EGRESO': 'object',
     'AREA_FUNCIONAL_EGRESO': 'Int16',
-    'DIAS_ESTADA': 'Int16',
+    # 'DIAS_ESTADA': 'Int16',
     'CONDICION_EGRESO': 'Int8',
     'DIAG1': 'object',
     'GLOSA_DIAG1': 'object',
@@ -225,7 +226,7 @@ def calcular_porcentaje_metrica_por_diagnostico(df, subgrupo_ranking, variable_a
 def obtener_ranking_total(df, agrupar_por, subgrupo_ranking, variable_a_analizar):
     tmp = df.copy()
 
-    df_agrupada = tmp.groupby(agrupar_por).agg(N_Egresos=('TIPO_EDAD', 'count'),
+    df_agrupada = tmp.groupby(agrupar_por).agg(N_Egresos=('PERTENENCIA_ESTABLECIMIENTO_SALUD', 'count'),
                                                DIAS_ESTADA_Promedio=('DIAS_ESTADA', 'mean'))
 
     orden_ranking = subgrupo_ranking + variable_a_analizar
