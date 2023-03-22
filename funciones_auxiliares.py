@@ -8,48 +8,44 @@ import funciones_auxiliares_hito_2 as aux2
 
 RUTA_CIE = 'input/CIE-10.xlsx'
 
-RUTA_2001 = 'input/Egresos_Hospitalarios_2001.csv'
-RUTA_2002 = 'input/Egresos_Hospitalarios_2002.csv'
-RUTA_2003 = 'input/Egresos_Hospitalarios_2003.csv'
-RUTA_2004 = 'input/Egresos_Hospitalarios_2004.csv'
-RUTA_2005 = 'input/Egresos_Hospitalarios_2005.csv'
-RUTA_2006 = 'input/Egresos_Hospitalarios_2006.csv'
-RUTA_2007 = 'input/Egresos_Hospitalarios_2007.csv'
-RUTA_2008 = 'input/Egresos_Hospitalarios_2008.csv'
-RUTA_2009 = 'input/Egresos_Hospitalarios_2009.csv'
-RUTA_2010 = 'input/Egresos_Hospitalarios_2010.csv'
-RUTA_2011 = 'input/Egresos_Hospitalarios_2011.csv'
-RUTA_2012 = 'input/Egresos_Hospitalarios_2012.csv'
-RUTA_2013 = 'input/Egresos_Hospitalarios_2013.csv'
-RUTA_2014 = 'input/Egresos_Hospitalarios_2014.csv'
-RUTA_2015 = 'input/Egresos_Hospitalarios_2015.csv'
-RUTA_2016 = 'input/Egresos_Hospitalarios_2016.csv'
-RUTA_2017 = 'input/Egresos_Hospitalarios_2017.csv'
-RUTA_2018 = 'input/Egresos_Hospitalarios_2018.csv'
-RUTA_2019 = 'input/Egresos_Hospitalarios_2019.csv'
-RUTA_2020 = 'input/Egresos_Hospitalarios_2020.csv'
 
+LEER_ANIO_INICIO = 2001
+LEER_ANIO_FINAL = 2020
+ARCHIVOS_A_LEER = [f'input/Egresos_Hospitalarios_{i}.csv' for i in range(LEER_ANIO_INICIO,
+                                                                         LEER_ANIO_FINAL + 1)]
 
-ARCHIVOS = {'2001': RUTA_2001,
-            '2002': RUTA_2002,
-            '2003': RUTA_2003,
-            '2004': RUTA_2004,
-            '2005': RUTA_2005,
-            '2006': RUTA_2006,
-            '2007': RUTA_2007,
-            '2008': RUTA_2008,
-            '2009': RUTA_2009,
-            '2010': RUTA_2010,
-            '2011': RUTA_2011,
-            '2012': RUTA_2012,
-            '2013': RUTA_2013,
-            '2014': RUTA_2014,
-            '2015': RUTA_2015,
-            '2016': RUTA_2016,
-            '2017': RUTA_2017,
-            '2018': RUTA_2018,
-            '2019': RUTA_2019,
-            '2020': RUTA_2020}
+DICT_ENCODE_VARIABLES = {
+    'ESTABLECIMIENTO_SALUD': 'Int32',
+    'GLOSA_ESTABLECIMIENTO_SALUD': 'category',
+    'PERTENENCIA_ESTABLECIMIENTO_SALUD': 'category',
+    'SEREMI': 'Int8',
+    'SERVICIO_DE_SALUD': 'Int8',
+    'SEXO': 'Int8',
+    'EDAD_CANT': 'Int8',
+    'TIPO_EDAD': 'Int8',
+    'EDAD_A_OS': 'Int8',
+    'PUEBLO_ORIGINARIO': 'Int8',
+    'PAIS_ORIGEN': 'Int16',
+    'GLOSA_COMUNA_RESIDENCIA': 'category',
+    'REGION_RESIDENCIA': 'category',
+    'GLOSA_REGION_RESIDENCIA': 'category',
+    'PREVISION': 'Int8',
+    'BENEFICIARIO': 'category',
+    'MODALIDAD': 'Int8',
+    'PROCEDENCIA': 'Int8',
+    'ANO_EGRESO': 'Int16',
+    'FECHA_EGRESO': 'object',
+    'AREA_FUNCIONAL_EGRESO': 'Int16',
+    'DIAS_ESTADA': 'Int16',
+    'CONDICION_EGRESO': 'Int8',
+    'DIAG1': 'object',
+    'GLOSA_DIAG1': 'object',
+    'DIAG2': 'object',
+    'GLOSA_DIAG2': 'object',
+    'INTERV_Q': 'Int8',
+    'CODIGO_INTERV_Q_PPAL': 'Int32',
+    'GLOSA_INTERV_Q_PPAL': 'object'
+}
 
 
 def convertir_ints_a_strs(valor):
@@ -72,7 +68,7 @@ def convertir_ints_a_strs(valor):
 
 
 def leer_anios_egresos():
-    '''Función que lee todos los DataFrames de los egresos contenidos en la variable global 
+    '''Función que lee todos los DataFrames de los egresos contenidos en la variable global
     ARCHIVOS. Además, convierte la columna REGION_RESIDENCIA a strings.
 
     :returns: Un diccionario con todos los archivos que estén contenido en la variable ARCHIVOS
@@ -85,6 +81,16 @@ def leer_anios_egresos():
             convertir_ints_a_strs)
 
     return dfs
+
+
+def lectura_archivos():
+    dfs_archivos = (pd.read_csv(f, encoding='latin-1', delimiter=';', on_bad_lines='warn',
+                                usecols=[i for i in range(34)],
+                                dtype=DICT_ENCODE_VARIABLES) for f in ARCHIVOS_A_LEER)
+
+    df = pd.concat(dfs_archivos)
+
+    return df
 
 
 def graficar_conteo_valores(serie_tiempo):
@@ -154,7 +160,7 @@ def analisis_variable_en_el_tiempo(df, variable_a_agrupar):
     :param df: Es el DataFrame que se quiere analizar
     :type df: pd.DataFrame
 
-    :param variable_a_agrupar: Es la variable del DataFrame que se quiere analizar a lo 
+    :param variable_a_agrupar: Es la variable del DataFrame que se quiere analizar a lo
     largo del tiempo
     :type variable_a_agrupar: str
     '''
