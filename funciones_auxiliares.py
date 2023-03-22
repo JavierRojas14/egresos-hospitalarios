@@ -6,22 +6,50 @@ from functools import reduce
 
 import funciones_auxiliares_hito_2 as aux2
 
-RUTA_2013 = 'input/Egresos_Hospitalarios_2013/Egresos_Hospitalarios_2013.csv'
-RUTA_2014 = 'input/Egresos_Hospitalarios_2014-20230216T134804Z-001/Egresos_Hospitalarios_2014/Egresos_Hospitalarios_2014.csv'
-RUTA_2015 = 'input/Egresos_Hospitalarios_2015-20230216T124219Z-001/Egresos_Hospitalarios_2015/Egresos_Hospitalarios_2015.csv'
-RUTA_2016 = 'input/Egresos_Hospitalarios_2016-20230216T124117Z-001/Egresos_Hospitalarios_2016/Egresos_Hospitalarios_2016.csv'
-RUTA_2017 = 'input/Egresos_Hospitalarios_2017-20230216T123902Z-001/Egresos_Hospitalarios_2017/Egresos_Hospitalarios_2017.csv'
-RUTA_2018 = 'input/Egresos_Hospitalarios_2018-20230216T123758Z-001/Egresos_Hospitalarios_2018/Egresos_Hospitalarios_2018.csv'
-RUTA_2019 = 'input/Egresos_Hospitalarios_2019-20230216T123639Z-001/Egresos_Hospitalarios_2019/Egresos_Hospitalarios_2019.csv'
 RUTA_CIE = 'input/CIE-10.xlsx'
 
-ARCHIVOS = {'2013': RUTA_2013,
+RUTA_2001 = 'input/Egresos_Hospitalarios_2001.csv'
+RUTA_2002 = 'input/Egresos_Hospitalarios_2002.csv'
+RUTA_2003 = 'input/Egresos_Hospitalarios_2003.csv'
+RUTA_2004 = 'input/Egresos_Hospitalarios_2004.csv'
+RUTA_2005 = 'input/Egresos_Hospitalarios_2005.csv'
+RUTA_2006 = 'input/Egresos_Hospitalarios_2006.csv'
+RUTA_2007 = 'input/Egresos_Hospitalarios_2007.csv'
+RUTA_2008 = 'input/Egresos_Hospitalarios_2008.csv'
+RUTA_2009 = 'input/Egresos_Hospitalarios_2009.csv'
+RUTA_2010 = 'input/Egresos_Hospitalarios_2010.csv'
+RUTA_2011 = 'input/Egresos_Hospitalarios_2011.csv'
+RUTA_2012 = 'input/Egresos_Hospitalarios_2012.csv'
+RUTA_2013 = 'input/Egresos_Hospitalarios_2013.csv'
+RUTA_2014 = 'input/Egresos_Hospitalarios_2014.csv'
+RUTA_2015 = 'input/Egresos_Hospitalarios_2015.csv'
+RUTA_2016 = 'input/Egresos_Hospitalarios_2016.csv'
+RUTA_2017 = 'input/Egresos_Hospitalarios_2017.csv'
+RUTA_2018 = 'input/Egresos_Hospitalarios_2018.csv'
+RUTA_2019 = 'input/Egresos_Hospitalarios_2019.csv'
+RUTA_2020 = 'input/Egresos_Hospitalarios_2020.csv'
+
+
+ARCHIVOS = {'2001': RUTA_2001,
+            '2002': RUTA_2002,
+            '2003': RUTA_2003,
+            '2004': RUTA_2004,
+            '2005': RUTA_2005,
+            '2006': RUTA_2006,
+            '2007': RUTA_2007,
+            '2008': RUTA_2008,
+            '2009': RUTA_2009,
+            '2010': RUTA_2010,
+            '2011': RUTA_2011,
+            '2012': RUTA_2012,
+            '2013': RUTA_2013,
             '2014': RUTA_2014,
             '2015': RUTA_2015,
             '2016': RUTA_2016,
             '2017': RUTA_2017,
             '2018': RUTA_2018,
-            '2019': RUTA_2019}
+            '2019': RUTA_2019,
+            '2020': RUTA_2020}
 
 
 def convertir_ints_a_strs(valor):
