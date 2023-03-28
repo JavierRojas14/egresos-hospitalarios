@@ -50,6 +50,13 @@ DICT_ENCODE_VARIABLES = {
 
 
 def lectura_archivos():
+    '''Funcion que lee los archivos de Egresos Hospitalarios en la carpeta input. Para leer los años
+    se utilizan las variables globales LEER_ANIO_INICIO y LEER_ANIO_FINAL. Además, utiliza el
+    diccionario global para asignar el tipo de dato para cada columna.
+
+    :returns: El DataFrame concatenado de los años a analizar en Egresos Hospitalarios
+    :rtype: pd.DataFrame
+    '''
     dfs_archivos = (pd.read_csv(f, encoding='latin-1', delimiter=';', on_bad_lines='warn',
                                 usecols=[i for i in range(34)],
                                 dtype=DICT_ENCODE_VARIABLES) for f in ARCHIVOS_A_LEER)
@@ -94,6 +101,12 @@ def tratar_columna_codigo_cie(df):
 
 
 def obtener_diccionario_cie():
+    '''Funcion que obtiene el diccionario CIE-10 de FONASA. La funcion trata la columna de Codigo
+    CIE-10 para dejarlos todos sin punto y con largo 4.
+
+    :returns: El DataFrame del diccionario CIE-10
+    :rtype: pd.DataFrame
+    '''
     cie = pd.read_excel(RUTA_CIE)
 
     cie = tratar_columna_codigo_cie(cie)
