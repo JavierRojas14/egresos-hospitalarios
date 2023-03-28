@@ -59,51 +59,6 @@ def lectura_archivos():
     return df
 
 
-def graficar_conteo_valores(serie_tiempo):
-    '''Funcion que grafica un conteo de los valores distintos de una variable
-
-    :param serie_tiempo: Es la serie que se quiere graficar
-    :type serie_tiempo: pd.Series
-    '''
-    serie_tiempo.plot(kind='bar')
-    plt.axhline(serie_tiempo.mean(), color='tomato')
-    plt.show()
-
-
-def analizar_conteo_de_variable(df, variable):
-    conteo = df[variable].value_counts()
-    display(conteo.to_frame())
-    display(conteo.describe().to_frame())
-    graficar_conteo_valores(conteo.sort_index())
-    aux2.graficar_distribucion_variable_numerica(conteo.reset_index(drop=True), 'egresos')
-
-
-def analizar_ranking_diagnosticos_hospital(df, glosa_hospital):
-    df_hospital = df.query('GLOSA_ESTABLECIMIENTO_SALUD == @glosa_hospital')
-    diagnosticos_hospital = df_hospital.GLOSA_DIAG1.value_counts()
-
-    resultados_hospital = []
-    for nombre_diagnostico, cantidad_hospital in diagnosticos_hospital.items():
-        df_total = df.query('GLOSA_DIAG1 == @nombre_diagnostico')
-        cantidad_total = df_total.shape[0]
-
-        df_publico_diagnostico = df.query(
-            'GLOSA_DIAG1 == @nombre_diagnostico and PERTENENCIA_ESTABLECIMIENTO_SALUD == "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS"')
-        cantidad_publico = df_publico_diagnostico.shape[0]
-
-        porcentaje_hospital = cantidad_hospital/cantidad_total
-
-        resultados_hospital.append([nombre_diagnostico, cantidad_total, cantidad_hospital,
-                                    porcentaje_hospital])
-
-    ranking_hospital = pd.DataFrame(resultados_hospital, columns=['GLOSA_DIAG1', 'TOTAL_NACIONAL',
-                                                                  'TOTAL_HOSPITAL', 'PORCENTAJE_ATENDIMIENTO'])
-
-    ranking_hospital = ranking_hospital.sort_values(by='PORCENTAJE_ATENDIMIENTO', ascending=False)
-
-    return ranking_hospital
-
-
 def obtener_resumen_por_nivel(resumen_por_anio_de_variable, variable_analizada):
     '''Función que describe describe cada uno de los los subgrupos presentes
     en una variable de un DataFrame
