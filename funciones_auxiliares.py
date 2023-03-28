@@ -59,48 +59,6 @@ def lectura_archivos():
     return df
 
 
-def obtener_resumen_por_nivel(resumen_por_anio_de_variable, variable_analizada):
-    '''Función que describe describe cada uno de los los subgrupos presentes
-    en una variable de un DataFrame
-
-    :param resumen_por_anio_de_variable:
-    '''
-    df_variable_por_anio = resumen_por_anio_de_variable.reset_index(level=variable_analizada)
-    for valor in df_variable_por_anio[variable_analizada].unique():
-        mask_valor = df_variable_por_anio[variable_analizada] == valor
-        df_del_valor = df_variable_por_anio[mask_valor].drop(columns=variable_analizada)
-        print(f'El resumen de {valor} es:\n')
-        display(df_del_valor.describe())
-
-
-def analisis_variable_en_el_tiempo(df, variable_a_agrupar):
-    '''Función que permite analizar una variable de un DataFrame a lo largo del tiempo.
-    El DataFrame debe tener una variable llamada "ANO_EGRESO", que corresponde a una variable
-    de tiempo
-
-    :param df: Es el DataFrame que se quiere analizar
-    :type df: pd.DataFrame
-
-    :param variable_a_agrupar: Es la variable del DataFrame que se quiere analizar a lo
-    largo del tiempo
-    :type variable_a_agrupar: str
-    '''
-    agrupado = df.groupby(by=['ANO_EGRESO'])[variable_a_agrupar].value_counts()
-    agrupado_porcentaje = df.groupby(by=['ANO_EGRESO'])[variable_a_agrupar].value_counts('%')
-    juntas = pd.concat([agrupado, agrupado_porcentaje], axis=1)
-    juntas.columns = ['CANTIDAD', 'PORCENTAJE']
-
-    agrupado_largo = agrupado.unstack()
-    agrupado_largo.plot(kind='bar')
-
-    display(juntas)
-    plt.show()
-
-    obtener_resumen_por_nivel(juntas, variable_a_agrupar)
-
-    return juntas
-
-
 def cambiar_cie_con_x(valor):
     if len(valor) == 3:
         return f'{valor}X'
