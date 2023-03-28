@@ -49,41 +49,6 @@ DICT_ENCODE_VARIABLES = {
 }
 
 
-def convertir_ints_a_strs(valor):
-    '''Función que convierte los valores de la columna Región de Los Egresos Hospitalarios. Esta
-    columna tiene ints y objects, y los consolida solamente a objects
-
-    :param valor: Es uno de los valores de la columna Región de los egresos Hospitalarios
-    :type valor: str/int
-
-    :returns: El valor convertido a string/object
-    :rtype: str
-    '''
-    if isinstance(valor, int):
-        if len(str(valor)) == 1:
-            return f'0{valor}'
-        else:
-            return str(valor)
-
-    return valor
-
-
-def leer_anios_egresos():
-    '''Función que lee todos los DataFrames de los egresos contenidos en la variable global
-    ARCHIVOS. Además, convierte la columna REGION_RESIDENCIA a strings.
-
-    :returns: Un diccionario con todos los archivos que estén contenido en la variable ARCHIVOS
-    :rtype: dict
-    '''
-    dfs = {}
-    for anio, ruta in ARCHIVOS.items():
-        dfs[anio] = pd.read_csv(ruta, delimiter=';', encoding='latin-1', on_bad_lines='skip')
-        dfs[anio]['REGION_RESIDENCIA'] = dfs[anio]['REGION_RESIDENCIA'].apply(
-            convertir_ints_a_strs)
-
-    return dfs
-
-
 def lectura_archivos():
     dfs_archivos = (pd.read_csv(f, encoding='latin-1', delimiter=';', on_bad_lines='warn',
                                 usecols=[i for i in range(34)],
