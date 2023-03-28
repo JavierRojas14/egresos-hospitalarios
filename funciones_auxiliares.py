@@ -60,13 +60,31 @@ def lectura_archivos():
 
 
 def cambiar_cie_con_x(valor):
+    '''Funcion que cambia los codigos CIE con largo 3 (Ej: A22), por la nomenclatura
+    de 4 caracteres (Ej: A22X). Si es un codigo CIE de largo 4, entonces se deja como esta
+
+    :param valor: Codigo CIE-10 que se quiere cambiar. Puede tener largo 3 o 4
+    :type valor: str
+
+    :returns: El Codigo CIE-10 con largo 4
+    :rtype: str
+    '''
     if len(valor) == 3:
         return f'{valor}X'
 
     return valor
 
 
-def tratar_columna_codigo(df):
+def tratar_columna_codigo_cie(df):
+    '''Funcion que modifica la columna de código CIE-10 del diccionario CIE-10 de FONASA.
+    Quita el punto de los código, y agrega X a los códigos de largo 3.
+
+    :param df: Es el DataFrame diccionario de CIE-10
+    :type df: pd.DataFrame
+
+    :returns: El diccionario CIE-10 con la columna de códigos CIE-10 sin puntos y todos con largo 4
+    :rtype: pd.DataFrame
+    '''
     tmp = df.copy()
 
     tmp['CodigoSinPunto'] = tmp['Código'].str.replace('.', '', regex=False)
@@ -78,7 +96,7 @@ def tratar_columna_codigo(df):
 def obtener_diccionario_cie():
     cie = pd.read_excel(RUTA_CIE)
 
-    cie = tratar_columna_codigo(cie)
+    cie = tratar_columna_codigo_cie(cie)
 
     return cie
 
