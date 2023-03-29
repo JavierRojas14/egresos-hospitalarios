@@ -162,21 +162,21 @@ def obtener_ranking_total(df, agrupar_por, subgrupo_ranking, variable_a_analizar
 
     df_agrupada = tmp.groupby(agrupar_por).agg(N_Egresos=('PERTENENCIA_ESTABLECIMIENTO_SALUD', 'count'),
                                                DIAS_ESTADA_Promedio=('DIAS_ESTADA', 'mean'),
-                                               N_Int_Q=('INTERV_Q', 'count'),
-                                               N_Muertos=('CONDICION_EGRESO', 'count'))
+                                               N_Int_Q=('INTERV_Q', 'sum'),
+                                               N_Muertos=('CONDICION_EGRESO', 'sum'))
 
     orden_ranking = subgrupo_ranking + variable_a_analizar
     df_agrupada = df_agrupada.sort_values(orden_ranking, ascending=False)
 
-    df_agrupada['%_Egresos'] = calcular_porcentaje_metrica_por_diagnostico(
-        df_agrupada, subgrupo_ranking, 'N_Egresos')
+    # df_agrupada['%_Egresos'] = calcular_porcentaje_metrica_por_diagnostico(
+    #     df_agrupada, subgrupo_ranking, 'N_Egresos')
 
-    df_agrupada['%_DIAS_ESTADA_Promedio'] = calcular_porcentaje_metrica_por_diagnostico(
-        df_agrupada, subgrupo_ranking, 'DIAS_ESTADA_Promedio')
+    # df_agrupada['%_DIAS_ESTADA_Promedio'] = calcular_porcentaje_metrica_por_diagnostico(
+    #     df_agrupada, subgrupo_ranking, 'DIAS_ESTADA_Promedio')
 
-    orden_columnas = ['N_Egresos', '%_Egresos', 'DIAS_ESTADA_Promedio', '%_DIAS_ESTADA_Promedio']
+    # orden_columnas = ['N_Egresos', '%_Egresos', 'DIAS_ESTADA_Promedio', '%_DIAS_ESTADA_Promedio']
 
-    df_agrupada = df_agrupada[orden_columnas]
+    # df_agrupada = df_agrupada[orden_columnas]
 
     df_agrupada = df_agrupada.reset_index()
 
