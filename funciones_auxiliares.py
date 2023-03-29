@@ -9,7 +9,7 @@ import funciones_auxiliares_hito_2 as aux2
 RUTA_CIE = 'input/CIE-10.xlsx'
 
 
-LEER_ANIO_INICIO = 2019
+LEER_ANIO_INICIO = 2001
 LEER_ANIO_FINAL = 2020
 ARCHIVOS_A_LEER = [f'input/Egresos_Hospitalarios_{i}.csv' for i in range(LEER_ANIO_INICIO,
                                                                          LEER_ANIO_FINAL + 1)]
@@ -168,15 +168,10 @@ def obtener_ranking_total(df, agrupar_por, subgrupo_ranking, variable_a_analizar
     orden_ranking = subgrupo_ranking + variable_a_analizar
     df_agrupada = df_agrupada.sort_values(orden_ranking, ascending=False)
 
-    # df_agrupada['%_Egresos'] = calcular_porcentaje_metrica_por_diagnostico(
-    #     df_agrupada, subgrupo_ranking, 'N_Egresos')
-
-    # df_agrupada['%_DIAS_ESTADA_Promedio'] = calcular_porcentaje_metrica_por_diagnostico(
-    #     df_agrupada, subgrupo_ranking, 'DIAS_ESTADA_Promedio')
-
-    # orden_columnas = ['N_Egresos', '%_Egresos', 'DIAS_ESTADA_Promedio', '%_DIAS_ESTADA_Promedio']
-
-    # df_agrupada = df_agrupada[orden_columnas]
+    for columna in df_agrupada.columns:
+        df_agrupada[f'%_{columna}'] = calcular_porcentaje_metrica_por_diagnostico(
+            df_agrupada, subgrupo_ranking, columna
+        )
 
     df_agrupada = df_agrupada.reset_index()
 
