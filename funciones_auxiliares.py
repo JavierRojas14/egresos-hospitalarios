@@ -9,7 +9,7 @@ import funciones_auxiliares_hito_2 as aux2
 RUTA_CIE = 'input/CIE-10.xlsx'
 
 
-LEER_ANIO_INICIO = 2001
+LEER_ANIO_INICIO = 2019
 LEER_ANIO_FINAL = 2020
 ARCHIVOS_A_LEER = [f'input/Egresos_Hospitalarios_{i}.csv' for i in range(LEER_ANIO_INICIO,
                                                                          LEER_ANIO_FINAL + 1)]
@@ -62,6 +62,8 @@ def lectura_archivos():
                                 dtype=DICT_ENCODE_VARIABLES) for f in ARCHIVOS_A_LEER)
 
     df = pd.concat(dfs_archivos)
+    df['INTERV_Q'] = df['INTERV_Q'].replace({2: 0})
+    df['CONDICION_EGRESO'] = df['CONDICION_EGRESO'].replace({1: 0, 2: 1})
 
     return df
 
@@ -114,21 +116,44 @@ def obtener_diccionario_cie():
     return cie
 
 
-def aplanar_columnas(df):
-    tmp = df.copy()
-
-    tmp.columns = ['_'.join(col).strip('_') for col in tmp.columns]
-
-    return tmp
-
-
 def obtener_diagnosticos_hospital(df, glosa):
+    '''Funcion que permite obtener los diagnosticos unicos de un hospital en especifico. Se
+    especifica la glosa del hospital que se quieren buscar los datos.
+
+    :param df: El DataFrame donde se quieren buscar los diagnosticos del hospital
+    :type df: pd.DataFrame
+
+    :param glosa: Glosa del Hospital que se quieren buscar los diagnosticos unicos
+    :type glosa: str
+
+    :returns: Una lista con los diagnosticos unicos que posee el Hospital
+    :rtype: list
+    '''
     diagnosticos_hospital = df.query('GLOSA_ESTABLECIMIENTO_SALUD == @glosa')
 
     return diagnosticos_hospital['DIAG1'].unique()
 
 
 def calcular_porcentaje_metrica_por_diagnostico(df, subgrupo_ranking, variable_a_analizar):
+    '''Funcion que calcula el porcentaje para cada valor de una columna (indicada por el
+    argumento variable a analizar). El total utilizado para calculcar el porcentaje 
+    corresponde a el subgrupo del DataFrame indicado por la variable subgrupo_ranking
+
+    :param df: Es el DataFrame que contiene la variable que se le quiere calcular el porcentaje
+    a sus valores, y que contiene los subgrupos
+    :type df: pd.DataFrame
+
+    :param subgrupo_ranking: Contiene las variables a utilizar para generar cada grupo que
+    constituira el 100% o el total del conteo para la variable a analizar. Ej: ANO_EGRESO y DIAG_1
+    :type subgrupo_ranking: list
+
+    :param variable_a_analizar: Es la variable en donde se quiere calcular el porcentaje para cada
+    uno de sus valores
+    :type variable_a_analizar: str
+
+    :returns: Un array con todos los porcentajes para cada valor de la variable analizada
+    :rtype: pd.Series
+    '''
     return df[variable_a_analizar] / df.groupby(subgrupo_ranking)[variable_a_analizar].transform('sum')
 
 
@@ -136,7 +161,9 @@ def obtener_ranking_total(df, agrupar_por, subgrupo_ranking, variable_a_analizar
     tmp = df.copy()
 
     df_agrupada = tmp.groupby(agrupar_por).agg(N_Egresos=('PERTENENCIA_ESTABLECIMIENTO_SALUD', 'count'),
-                                               DIAS_ESTADA_Promedio=('DIAS_ESTADA', 'mean'))
+                                               DIAS_ESTADA_Promedio=('DIAS_ESTADA', 'mean'),
+                                               N_Int_Q=('INTERV_Q', 'count'),
+                                               N_Muertos=('CONDICION_EGRESO', 'count'))
 
     orden_ranking = subgrupo_ranking + variable_a_analizar
     df_agrupada = df_agrupada.sort_values(orden_ranking, ascending=False)
