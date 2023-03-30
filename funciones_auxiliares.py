@@ -154,10 +154,13 @@ def calcular_porcentaje_metrica_por_diagnostico(df, subgrupo_ranking, variable_a
     :returns: Un array con todos los porcentajes para cada valor de la variable analizada
     :rtype: pd.Series
     '''
-    return df[variable_a_analizar] / df.groupby(subgrupo_ranking)[variable_a_analizar].transform('sum')
+    return (df[variable_a_analizar] /
+            df.groupby(subgrupo_ranking)[variable_a_analizar].transform('sum'))
 
 
-def obtener_ranking_total(df, agrupar_por, subgrupo_ranking, variable_a_analizar):
+def calcular_metricas_de_egresos_agrupados(df, agrupar_por, subgrupo_ranking, variable_a_analizar):
+    '''Funcion que 
+    '''
     tmp = df.copy()
 
     df_agrupada = tmp.groupby(agrupar_por).agg(N_Egresos=('DIAG1', 'count'),
@@ -189,7 +192,7 @@ def obtener_tabla_posicion_hospital_en_ranking(ranking, glosa_hospital, subgrupo
 
 
 def analizar_ranking_hospital(df, hospital_a_analizar, agrupar_por, subgrupo_ranking, variable_a_analizar):
-    tabla_ranking_global = obtener_ranking_total(
+    tabla_ranking_global = calcular_metricas_de_egresos_agrupados(
         df, agrupar_por, subgrupo_ranking, variable_a_analizar)
     tabla_posicion_hospital = obtener_tabla_posicion_hospital_en_ranking(tabla_ranking_global,
                                                                          hospital_a_analizar,
