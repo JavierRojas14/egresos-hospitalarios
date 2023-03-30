@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 
 from functools import reduce
 
-import funciones_auxiliares_hito_2 as aux2
-
 RUTA_CIE = 'input/CIE-10.xlsx'
 
 
