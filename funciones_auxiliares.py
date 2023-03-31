@@ -134,7 +134,7 @@ def obtener_diagnosticos_hospital(df, glosa):
 
 def calcular_porcentaje_metrica_por_diagnostico(df, subgrupo_ranking, variable_a_analizar):
     '''Funcion que calcula el porcentaje para cada valor de una columna (indicada por el
-    argumento variable a analizar). El total utilizado para calculcar el porcentaje 
+    argumento variable a analizar). El total utilizado para calculcar el porcentaje
     corresponde a el subgrupo del DataFrame indicado por la variable subgrupo_ranking
 
     :param df: Es el DataFrame que contiene la variable que se le quiere calcular el porcentaje
@@ -156,8 +156,8 @@ def calcular_porcentaje_metrica_por_diagnostico(df, subgrupo_ranking, variable_a
             df.groupby(subgrupo_ranking)[variable_a_analizar].transform('sum'))
 
 
-def calcular_metricas_de_egresos_agrupados(df, agrupar_por, subgrupo_ranking, variable_a_analizar):
-    '''Funcion que 
+def calcular_metricas_de_egresos_agrupados(df, agrupar_por):
+    '''Funcion que
     '''
     tmp = df.copy()
 
@@ -165,14 +165,6 @@ def calcular_metricas_de_egresos_agrupados(df, agrupar_por, subgrupo_ranking, va
                                                DIAS_ESTADA_Promedio=('DIAS_ESTADA', 'mean'),
                                                N_Int_Q=('INTERV_Q', 'sum'),
                                                N_Muertos=('CONDICION_EGRESO', 'sum'))
-
-    orden_ranking = subgrupo_ranking + variable_a_analizar
-    df_agrupada = df_agrupada.sort_values(orden_ranking, ascending=False)
-
-    for columna in df_agrupada.columns:
-        df_agrupada[f'%_{columna}'] = calcular_porcentaje_metrica_por_diagnostico(
-            df_agrupada, subgrupo_ranking, columna
-        )
 
     df_agrupada = df_agrupada.reset_index()
 
@@ -189,7 +181,8 @@ def obtener_tabla_posicion_hospital_en_ranking(ranking, glosa_hospital, subgrupo
     return tmp
 
 
-def analizar_ranking_hospital(df, hospital_a_analizar, agrupar_por, subgrupo_ranking, variable_a_analizar):
+def analizar_ranking_hospital(df, hospital_a_analizar, agrupar_por, subgrupo_ranking,
+                              variable_a_analizar):
     tabla_ranking_global = calcular_metricas_de_egresos_agrupados(
         df, agrupar_por, subgrupo_ranking, variable_a_analizar)
     tabla_posicion_hospital = obtener_tabla_posicion_hospital_en_ranking(tabla_ranking_global,
