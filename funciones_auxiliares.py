@@ -161,10 +161,10 @@ def calcular_metricas_de_egresos_agrupados(df, agrupar_por):
     '''
     tmp = df.copy()
 
-    df_agrupada = tmp.groupby(agrupar_por).agg(N_Egresos=('DIAG1', 'count'),
-                                               DIAS_ESTADA_Promedio=('DIAS_ESTADA', 'mean'),
-                                               N_Int_Q=('INTERV_Q', 'sum'),
-                                               N_Muertos=('CONDICION_EGRESO', 'sum'))
+    df_agrupada = tmp.groupby(agrupar_por).agg(n_egresos=('DIAG1', 'count'),
+                                               dias_estada_promedio=('DIAS_ESTADA', 'mean'),
+                                               n_int_q=('INTERV_Q', 'sum'),
+                                               n_muertos=('CONDICION_EGRESO', 'sum'))
 
     df_agrupada = df_agrupada.reset_index()
 
