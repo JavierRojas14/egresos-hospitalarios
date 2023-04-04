@@ -1,3 +1,16 @@
+PERTENECE_SNSS = 'Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS'
+NO_PERTENECE_SNSS = 'No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS'
+HOSPITALES_GRD = [118100, 110100, 115100, 121117, 103100, 116110, 119100, 113100,
+                  114101, 105101, 116108, 116105, 101100, 114105, 105100, 112102,
+                  133150, 126100, 121110, 121114, 129106, 113150, 107100, 106100,
+                  113130, 112100, 121121, 109100, 106103, 113180, 122100, 123100,
+                  107102, 110120, 105102, 111101, 111100, 108101, 124105, 128109,
+                  109101, 114103, 102100, 103101, 120101, 117101, 121109, 112101,
+                  104103, 115107, 107101, 110130, 116100, 118105, 115110, 112103,
+                  104100, 108100, 112104, 117102, 106102, 111195, 129100, 110150,
+                  125100]
+
+
 def obtener_ranking_subgrupo(df_estrato, subgrupo_del_ranking):
     return (df_estrato.groupby(subgrupo_del_ranking).cumcount() + 1)
 
@@ -71,3 +84,28 @@ def realizar_ranking_por_estrato(df_nacional, estratos, variables_para_rankear,
     tmp_global = tmp_global.reset_index()
 
     return tmp_global
+
+
+def obtener_codigos_de_estratos(completa_concatenada, hospital_interno=False):
+    df_publicos = completa_concatenada.query(
+        'PERTENENCIA_ESTABLECIMIENTO_SALUD == @PERTENECE_SNSS')
+    df_privados = completa_concatenada.query(
+        'PERTENENCIA_ESTABLECIMIENTO_SALUD == @NO_PERTENECE_SNSS '
+        'or GLOSA_ESTABLECIMIENTO_SALUD == @GLOSA_TORAX'
+    )
+
+    columna_codigos = 'ESTABLECIMIENTO_SALUD'
+    codigos_nacionales = completa_concatenada[columna_codigos].unique()
+    codigos_publicos = df_publicos[columna_codigos].unique()
+    codigos_privados = df_privados[columna_codigos].unique()
+    codigos_grd = HOSPITALES_GRD
+
+    diccionario_estratos = {'nacionales': codigos_nacionales,
+                            'publicos': codigos_publicos,
+                            'privados': codigos_privados,
+                            'grd': codigos_grd}
+
+    if hospital_interno:
+        diccionario_estratos['interno'] = hospital_interno
+
+    return diccionario_estratos
