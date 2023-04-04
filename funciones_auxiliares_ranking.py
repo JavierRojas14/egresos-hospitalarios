@@ -86,26 +86,24 @@ def realizar_ranking_por_estrato(df_nacional, estratos, variables_para_rankear,
     return tmp_global
 
 
-def obtener_codigos_de_estratos(completa_concatenada, hospital_interno=False):
+def obtener_codigos_de_estratos(completa_concatenada, hospital_interno):
     df_publicos = completa_concatenada.query(
         'PERTENENCIA_ESTABLECIMIENTO_SALUD == @PERTENECE_SNSS')
-    df_privados = completa_concatenada.query(
-        'PERTENENCIA_ESTABLECIMIENTO_SALUD == @NO_PERTENECE_SNSS '
-        'or GLOSA_ESTABLECIMIENTO_SALUD == @GLOSA_TORAX'
-    )
+
+    query_privados = ('PERTENENCIA_ESTABLECIMIENTO_SALUD == @NO_PERTENECE_SNSS or '
+                      'ESTABLECIMIENTO_SALUD == @hospital_interno')
+
+    df_privados = completa_concatenada.query(query_privados, engine='python')
 
     columna_codigos = 'ESTABLECIMIENTO_SALUD'
     codigos_nacionales = completa_concatenada[columna_codigos].unique()
     codigos_publicos = df_publicos[columna_codigos].unique()
     codigos_privados = df_privados[columna_codigos].unique()
-    codigos_grd = HOSPITALES_GRD
 
     diccionario_estratos = {'nacionales': codigos_nacionales,
                             'publicos': codigos_publicos,
                             'privados': codigos_privados,
-                            'grd': codigos_grd}
-
-    if hospital_interno:
-        diccionario_estratos['interno'] = hospital_interno
+                            'grd': HOSPITALES_GRD,
+                            'interno': [hospital_interno]}
 
     return diccionario_estratos
