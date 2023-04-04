@@ -25,7 +25,7 @@ def obtener_total_subgrupo(df_estrato, subgrupo_del_ranking, variable_analisis):
             subgrupo_del_ranking)[variable_analisis].transform('sum'))
 
 
-def obtener_metricas_para_un_estrato(subgrupo_del_ranking, variable_analisis, estrato, df_estrato):
+def obtener_metricas_para_un_estrato(df_estrato, estrato, subgrupo_del_ranking, variable_analisis,):
     tmp = df_estrato.copy()
 
     sufijo_cols = f'_{estrato}_{variable_analisis}'
@@ -53,13 +53,15 @@ def calcular_metricas_por_estrato(df, estratos, variables_para_rankear, subgrupo
     for variable_analisis in variables_para_rankear:
         resultados_estrato = {}
         for estrato, codigos_en_estrato in estratos.items():
-            df_estrato = tmp[tmp['ESTABLECIMIENTO_SALUD'].isin(
-                codigos_en_estrato)]
-            df_estrato = df_estrato.sort_values(subgrupo_del_ranking + [variable_analisis],
-                                                ascending=[False, True, False])
+            if estrato == 'interno':
+                subgrupo_del_ranking.remove('DIAG1')
 
-            df_resumen = obtener_metricas_para_un_estrato(subgrupo_del_ranking, variable_analisis,
-                                                          estrato, df_estrato)
+            df_estrato = tmp[tmp['ESTABLECIMIENTO_SALUD'].isin(codigos_en_estrato)]
+            df_estrato = df_estrato.sort_values(subgrupo_del_ranking + [variable_analisis],
+                                                ascending=False)
+
+            df_resumen = obtener_metricas_para_un_estrato(df_estrato, estrato,
+                                                          subgrupo_del_ranking, variable_analisis)
 
             resultados_estrato[estrato] = df_resumen
 
