@@ -7,8 +7,8 @@ from functools import reduce
 RUTA_CIE = 'input/CIE-10.xlsx'
 
 
-LEER_ANIO_INICIO = 2001
-LEER_ANIO_FINAL = 2020
+LEER_ANIO_INICIO = 2014
+LEER_ANIO_FINAL = 2014
 ARCHIVOS_A_LEER = [f'input/Egresos_Hospitalarios_{i}.csv' for i in range(LEER_ANIO_INICIO,
                                                                          LEER_ANIO_FINAL + 1)]
 
@@ -55,8 +55,8 @@ def lectura_archivos():
     :returns: El DataFrame concatenado de los años a analizar en Egresos Hospitalarios
     :rtype: pd.DataFrame
     '''
-    dfs_archivos = (pd.read_csv(f, encoding='latin-1', delimiter=';', on_bad_lines='warn',
-                                usecols=[i for i in range(34)],
+    dfs_archivos = (pd.read_csv(f, encoding='latin-1', delimiter=';',
+                                on_bad_lines='warn',
                                 dtype=DICT_ENCODE_VARIABLES) for f in ARCHIVOS_A_LEER)
 
     df = pd.concat(dfs_archivos)
