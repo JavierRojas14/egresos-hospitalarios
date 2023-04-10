@@ -7,8 +7,8 @@ from functools import reduce
 RUTA_CIE = 'input/CIE-10.xlsx'
 
 
-LEER_ANIO_INICIO = 2014
-LEER_ANIO_FINAL = 2014
+LEER_ANIO_INICIO = 2001
+LEER_ANIO_FINAL = 2020
 ARCHIVOS_A_LEER = [f'input/Egresos_Hospitalarios_{i}.csv' for i in range(LEER_ANIO_INICIO,
                                                                          LEER_ANIO_FINAL + 1)]
 
