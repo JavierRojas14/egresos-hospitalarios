@@ -72,5 +72,14 @@ def leer_archivos(filtro_hospital=11203):
         ).to_series()
         df = df_nacional.filter(pl.col("DIAG1").is_in(diags_torax))
         df = remapear_columnas_egresos(df)
+        df = df.with_columns(
+            ("Region " + pl.col("GLOSA_REGION_RESIDENCIA") + ", Chile").alias("region_pais")
+        )
+
+        df = df.with_columns(
+            (pl.col("GLOSA_COMUNA_RESIDENCIA") + ", " + pl.col("region_pais")).alias(
+                "comuna_region_pais"
+            )
+        )
 
         return df
