@@ -32,13 +32,20 @@ DICT_VARIABLES = {
 }
 
 
-def remapear_int_q_y_muertes(df):
+def remapear_columnas_egresos(df):
     tmp = df.with_columns(
         [
-            pl.col("INTERV_Q").map_dict({2: 0}, default=pl.col("INTERV_Q")).alias("INTERV_Q"),
-            pl.col("CONDICION_EGRESO")
-            .map_dict({1: 0, 2: 1}, default=pl.col("CONDICION_EGRESO"))
-            .alias("CONDICION_EGRESO"),
+            (pl.col("INTERV_Q").map_dict({2: 0}, default=pl.col("INTERV_Q"))),
+            (pl.col("CONDICION_EGRESO").map_dict({1: 0, 2: 1}, default=pl.col("CONDICION_EGRESO"))),
+            (
+                pl.col("GLOSA_REGION_RESIDENCIA").map_dict(
+                    {
+                        "Del Libertador B. O'Higgins": "del Libertador General Bernardo O'Higgins",
+                        "De Aisén del Gral. C. Ibáñez del Campo": "Aysén del General Carlos Ibáñez del Campo",
+                    },
+                    default=pl.col("GLOSA_REGION_RESIDENCIA"),
+                )
+            ),
         ]
     )
 
@@ -64,6 +71,6 @@ def leer_archivos(filtro_hospital=11203):
             )
         ).to_series()
         df = df_nacional.filter(pl.col("DIAG1").is_in(diags_torax))
-        df = remapear_int_q_y_muertes(df)
+        df = remapear_columnas_egresos(df)
 
         return df
