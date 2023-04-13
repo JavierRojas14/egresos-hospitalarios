@@ -110,3 +110,38 @@ def obtener_diccionario_estratos(df_nacional, hospital_interno):
     }
 
     return diccionario_estratos
+
+
+def obtener_metricas_para_un_estrato(df, glosa_estrato, variable_analisis, subgrupo_del_ranking):
+    if glosa_estrato == "interno":
+        subgrupo_del_ranking.remove("DIAG1")
+
+    sufijo_cols = f"_{glosa_estrato}_{variable_analisis}"
+    var_rank = f"ranking{sufijo_cols}"
+    var_porc = f"%{sufijo_cols}"
+    var_total = f"total{sufijo_cols}"
+
+    resumen = df.with_columns(
+        (pl.col("DIAG1").cumcount().over(subgrupo_del_ranking) + 1).alias(var_rank),
+        (pl.col("n_egresos").sum().over(subgrupo_del_ranking)).alias(var_total),
+    )
+
+    resumen = resumen.with_columns((pl.col("n_egresos") / pl.col(var_total)).alias(var_porc))
+
+    return resumen
+
+
+def obtener_resumen_por_estratos(df, dict_estratos, variables_a_rankear, subgrupo_del_ranking):
+    for variable_analisis in variables_a_rankear:
+        resultado_estrato = {}
+        df = df.sort(subgrupo_del_ranking + [variable_analisis], descending=True)
+
+        for glosa_estrato, codigos_en_estrato in dict_estratos.items():
+            df_estrato = df.filter(pl.col("ESTABLECIMIENTO_SALUD").is_in(codigos_en_estrato))
+            resumen = obtener_metricas_para_un_estrato(
+                df_estrato, glosa_estrato, variable_analisis, subgrupo_del_ranking
+            )
+
+            resultado_estrato[glosa_estrato] = resumen
+
+    return resultado_estrato
