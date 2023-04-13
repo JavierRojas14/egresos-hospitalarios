@@ -1,5 +1,6 @@
 import polars as pl
 
+
 PERTENECE_SNSS = "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS"
 NO_PERTENECE_SNSS = "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS"
 HOSPITALES_GRD = [
@@ -68,6 +69,18 @@ HOSPITALES_GRD = [
     129100,
     110150,
     125100,
+]
+
+
+UNIR_EN = [
+    "ANO_EGRESO",
+    "ESTABLECIMIENTO_SALUD",
+    "GLOSA_ESTABLECIMIENTO_SALUD",
+    "DIAG1",
+    "n_egresos",
+    "dias_estada_promedio",
+    "n_int_q",
+    "n_muertos",
 ]
 
 
@@ -145,3 +158,7 @@ def obtener_resumen_por_estratos(df, dict_estratos, variables_a_rankear, subgrup
             resultado_estrato[glosa_estrato] = resumen
 
     return resultado_estrato
+
+
+def left_join_consecutivo(left, right):
+    return left.join(right, how="left", on=UNIR_EN)
