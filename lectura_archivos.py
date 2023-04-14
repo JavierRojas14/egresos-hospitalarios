@@ -62,6 +62,35 @@ def obtener_diagnosticos_unicos_de_hospital(df, hospital_a_analizar):
     return diags_hospital
 
 
+def agregar_columnas_localizacion(df):
+    tmp = df.with_columns(
+        ("Region " + pl.col("GLOSA_REGION_RESIDENCIA") + ", Chile").alias("region_pais")
+    )
+
+    tmp = df.with_columns(
+        (pl.col("GLOSA_COMUNA_RESIDENCIA") + ", " + pl.col("region_pais")).alias(
+            "comuna_region_pais"
+        )
+    )
+
+    return tmp
+
+
+def categorizar_edad(df):
+    anios = df.select(pl.col("EDAD_A_OS")).collect(streaming=True)
+    categoria_edad = (
+        anios.to_series().cut(bins=range(0, 101, 10)).select(pl.col("category")).to_series()
+    )
+
+    print(categoria_edad)
+
+    tmp = df.with_columns(
+        categoria_edad.alias('EDAD_CATEGORIA')
+    )
+
+    return tmp
+
+
 def leer_archivos(filtro_hospital=11203):
     with pl.StringCache():
         df_nacional = pl.scan_csv("input/utf-8/*.csv", separator=";")
@@ -70,16 +99,9 @@ def leer_archivos(filtro_hospital=11203):
                 streaming=True
             )
         ).to_series()
+
         df = df_nacional.filter(pl.col("DIAG1").is_in(diags_torax))
         df = remapear_columnas_egresos(df)
-        df = df.with_columns(
-            ("Region " + pl.col("GLOSA_REGION_RESIDENCIA") + ", Chile").alias("region_pais")
-        )
 
-        df = df.with_columns(
-            (pl.col("GLOSA_COMUNA_RESIDENCIA") + ", " + pl.col("region_pais")).alias(
-                "comuna_region_pais"
-            )
-        )
 
         return df
