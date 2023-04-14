@@ -103,5 +103,4 @@ def leer_archivos(filtro_hospital=11203):
         df = df_nacional.filter(pl.col("DIAG1").is_in(diags_torax))
         df = remapear_columnas_egresos(df)
 
-
         return df
