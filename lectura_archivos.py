@@ -109,4 +109,6 @@ def leer_cie():
         pl.col("Código").str.replace(".", "", literal=True).str.ljust(4, "X").alias("DIAG1")
     )
 
+    cie = cie.drop(["Código", "Versión"])
+
     return cie
