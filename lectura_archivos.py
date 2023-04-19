@@ -106,7 +106,7 @@ def leer_archivos(filtro_hospital=11203):
 
 def leer_cie():
     cie = pl.read_excel("input/CIE-10.xlsx").with_columns(
-        pl.col("Código").str.replace(".", "", literal=True).str.ljust(4, "X").alias("CodigoEgresos")
+        pl.col("Código").str.replace(".", "", literal=True).str.ljust(4, "X").alias("DIAG1")
     )
 
     return cie
