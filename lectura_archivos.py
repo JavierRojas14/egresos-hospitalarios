@@ -84,9 +84,7 @@ def categorizar_edad(df):
 
     print(categoria_edad)
 
-    tmp = df.with_columns(
-        categoria_edad.alias('EDAD_CATEGORIA')
-    )
+    tmp = df.with_columns(categoria_edad.alias("EDAD_CATEGORIA"))
 
     return tmp
 
@@ -104,3 +102,11 @@ def leer_archivos(filtro_hospital=11203):
         df = remapear_columnas_egresos(df)
 
         return df
+
+
+def leer_cie():
+    cie = pl.read_excel("input/CIE-10.xlsx").with_columns(
+        pl.col("Código").str.replace(".", "", literal=True).str.ljust(4, "X").alias("CodigoEgresos")
+    )
+
+    return cie
