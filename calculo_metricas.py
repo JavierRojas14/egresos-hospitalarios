@@ -129,6 +129,8 @@ def obtener_metricas_para_un_estrato(df, glosa_estrato, variable_analisis, subgr
     if glosa_estrato == "interno":
         subgrupo_del_ranking.remove("DIAG1")
 
+    df = df.sort(subgrupo_del_ranking + [variable_analisis], descending=True)
+
     sufijo_cols = f"_{glosa_estrato}_{variable_analisis}"
     var_rank = f"ranking{sufijo_cols}"
     var_porc = f"%{sufijo_cols}"
@@ -147,7 +149,6 @@ def obtener_metricas_para_un_estrato(df, glosa_estrato, variable_analisis, subgr
 def obtener_resumen_por_estratos(df, dict_estratos, variables_a_rankear, subgrupo_del_ranking):
     for variable_analisis in variables_a_rankear:
         resultado_estrato = {}
-        df = df.sort(subgrupo_del_ranking + [variable_analisis], descending=True)
 
         for glosa_estrato, codigos_en_estrato in dict_estratos.items():
             df_estrato = df.filter(pl.col("ESTABLECIMIENTO_SALUD").is_in(codigos_en_estrato))
