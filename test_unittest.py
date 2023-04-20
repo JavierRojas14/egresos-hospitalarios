@@ -15,21 +15,29 @@ AGRUPACION = [
     "DIAG1",
 ]
 
-TESTS_DIAGNOSTICOS = [[112101, "P027"], [111195, "J189"], [103100, "P073"]]
+TESTS_DIAGNOSTICOS = [
+    [112101, "P027"],  # Testeo aleatorio
+    [111195, "J189"],  # Testeo aleatorio
+    [103100, "P073"],  # Testeo aleatorio
+    [111195, "K359"],
+]  # Testeo con Int Q
 
 
 def testear_n_egresos(resultado_metricas, df_prueba, cod_hospital, diag):
-    resultado_filtro = df_prueba.filter(
-        (pl.col("ESTABLECIMIENTO_SALUD") == cod_hospital) & (pl.col("DIAG1") == diag)
-    ).shape[0]
+    expr_filtro = (pl.col("ESTABLECIMIENTO_SALUD") == cod_hospital) & (pl.col("DIAG1") == diag)
+    resultado_filtro = df_prueba.filter(expr_filtro).shape[0]
 
-    resultado_metricas = (
-        resultado_metricas.filter(
-            (pl.col("ESTABLECIMIENTO_SALUD") == cod_hospital) & (pl.col("DIAG1") == diag)
-        )
-        .select("n_egresos")
-        .item()
-    )
+    resultado_metricas = resultado_metricas.filter(expr_filtro).select("n_egresos").item()
+
+    return resultado_filtro == resultado_metricas
+
+
+def testear_int_q(resultado_metricas, df_prueba, cod_hospital, diag):
+    expr_filtro = (pl.col("ESTABLECIMIENTO_SALUD") == cod_hospital) & (pl.col("DIAG1") == diag)
+    filtro_interv_q = (expr_filtro) & (pl.col("INTERV_Q") == 1)
+
+    resultado_filtro = df_prueba.filter(filtro_interv_q).shape[0]
+    resultado_metricas = resultado_metricas.filter(expr_filtro).select("n_int_q").item()
 
     return resultado_filtro == resultado_metricas
 
@@ -40,6 +48,7 @@ class TestMetricasEgresos(unittest.TestCase):
 
         for cod_hospital, diag in TESTS_DIAGNOSTICOS:
             self.assertTrue(testear_n_egresos(resultados, DF_PRUEBA, cod_hospital, diag))
+            self.assertTrue(testear_int_q(resultados, DF_PRUEBA, cod_hospital, diag))
 
 
 if __name__ == "__main__":
