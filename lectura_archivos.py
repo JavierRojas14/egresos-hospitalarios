@@ -31,23 +31,45 @@ DICT_VARIABLES = {
     "GLOSA_PROCED_PPAL": pl.Categorical,
 }
 
+MAPPING_METRICAS_EGRESOS = {"INTERV_Q": {2: 0}, "CONDICION_EGRESO": {1: 0, 2: 1}}
 
-def remapear_columnas_egresos(df):
-    tmp = df.with_columns(
-        [
-            (pl.col("INTERV_Q").map_dict({2: 0}, default=pl.col("INTERV_Q"))),
-            (pl.col("CONDICION_EGRESO").map_dict({1: 0, 2: 1}, default=pl.col("CONDICION_EGRESO"))),
-            (
-                pl.col("GLOSA_REGION_RESIDENCIA").map_dict(
-                    {
-                        "Del Libertador B. O'Higgins": "del Libertador General Bernardo O'Higgins",
-                        "De Aisén del Gral. C. Ibáñez del Campo": "Aysén del General Carlos Ibáñez del Campo",
-                    },
-                    default=pl.col("GLOSA_REGION_RESIDENCIA"),
-                )
-            ),
-        ]
-    )
+
+MAPPING_SOCIODEMOGRAFICO = {
+    "GLOSA_REGION_RESIDENCIA": {
+        "Del Libertador B. O'Higgins": "del Libertador General Bernardo O'Higgins",
+        "De Aisén del Gral. C. Ibáñez del Campo": "Aysén del General Carlos Ibáñez del Campo",
+    },
+    "SEXO": {1: "Hombre", 2: "Mujer", 3: "Intersex", 99: "Desconocido"},
+    "PUEBLO_ORIGINARIO": {
+        1: "MAPUCHE",
+        2: "AYMARA",
+        3: "RAPA NUI (PASCUENSE)",
+        4: "LICAN ANTAI",
+        5: "QUECHUA",
+        6: "COLLA",
+        7: "DIAGUITA",
+        8: "KAWÉSQAR",
+        9: "YAGÁN (YÁMANA)",
+        10: "OTRO (ESPECIFICAR)",
+        96: "NINGUNO",
+    },
+    "PREVISION": {
+        1: "FONASA",
+        2: "ISAPRE",
+        3: "CAPREDENA",
+        4: "DIPRECA",
+        5: "SISA",
+        96: "NINGUNA",
+        99: "DESCONOCIDO",
+    },
+}
+
+
+def mappear_columnas(df, dict_mapeo):
+    tmp = df.clone()
+
+    for variable, dict_cambio in dict_mapeo.items():
+        tmp = tmp.with_columns(pl.col(variable).map_dict(dict_cambio, default=pl.col(variable)))
 
     return tmp
 
@@ -60,6 +82,34 @@ def obtener_diagnosticos_unicos_de_hospital(df, hospital_a_analizar):
     )
 
     return diags_hospital
+
+
+def leer_archivos(filtro_hospital=11203):
+    with pl.StringCache():
+        df_nacional = pl.scan_csv("input/utf-8/*.csv", separator=";")
+        diags_torax = (
+            obtener_diagnosticos_unicos_de_hospital(df_nacional, filtro_hospital).collect(
+                streaming=True
+            )
+        ).to_series()
+
+        df = df_nacional.filter(pl.col("DIAG1").is_in(diags_torax))
+        df = mappear_columnas(df, MAPPING_METRICAS_EGRESOS)
+
+        return df
+
+
+def leer_cie():
+    cie = pl.read_excel("input/CIE-10.xlsx").with_columns(
+        pl.col("Código").str.replace(".", "", literal=True).str.ljust(4, "X").alias("DIAG1")
+    )
+
+    cie = cie.drop(["Código", "Versión"])
+
+    return cie
+
+
+# ANALISIS SOCIODEMOGRAFICO
 
 
 def agregar_columnas_localizacion(df):
@@ -76,39 +126,24 @@ def agregar_columnas_localizacion(df):
     return tmp
 
 
-def categorizar_edad(df):
-    anios = df.select(pl.col("EDAD_A_OS")).collect(streaming=True)
-    categoria_edad = (
-        anios.to_series().cut(bins=range(0, 101, 10)).select(pl.col("category")).to_series()
+def agregar_categorizacion_edad(df):
+    tmp = df.with_columns(
+        (df.get_column("EDAD_A_OS"))
+        .cut(bins=range(0, 101, 10), maintain_order=True)
+        .select(pl.col("category").alias("EDAD_CATEGORIA"))
     )
-
-    print(categoria_edad)
-
-    tmp = df.with_columns(categoria_edad.alias("EDAD_CATEGORIA"))
 
     return tmp
 
 
-def leer_archivos(filtro_hospital=11203):
+def obtener_df_inicial_sociodemografico(filtro_hospital=112103):
     with pl.StringCache():
-        df_nacional = pl.scan_csv("input/utf-8/*.csv", separator=";")
-        diags_torax = (
-            obtener_diagnosticos_unicos_de_hospital(df_nacional, filtro_hospital).collect(
-                streaming=True
-            )
-        ).to_series()
+        df_socio = pl.scan_csv("input/utf-8/*.csv", separator=";", dtypes=DICT_VARIABLES).filter(
+            pl.col("ESTABLECIMIENTO_SALUD") == filtro_hospital
+        )
 
-        df = df_nacional.filter(pl.col("DIAG1").is_in(diags_torax))
-        df = remapear_columnas_egresos(df)
+        df_socio = mappear_columnas(df_socio, MAPPING_SOCIODEMOGRAFICO)
+        df_socio = agregar_columnas_localizacion(df_socio).collect()
+        df_socio = agregar_categorizacion_edad(df_socio)
 
-        return df
-
-
-def leer_cie():
-    cie = pl.read_excel("input/CIE-10.xlsx").with_columns(
-        pl.col("Código").str.replace(".", "", literal=True).str.ljust(4, "X").alias("DIAG1")
-    )
-
-    cie = cie.drop(["Código", "Versión"])
-
-    return cie
+    return df_socio

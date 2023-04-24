@@ -78,6 +78,7 @@ UNIR_EN = [
     "GLOSA_ESTABLECIMIENTO_SALUD",
     "DIAG1",
     "n_egresos",
+    "dias_estada_totales",
     "dias_estada_promedio",
     "n_int_q",
     "n_muertos",
@@ -88,10 +89,14 @@ def obtener_metricas_egresos(df, agrupar_por):
     metricas_agregadas = df.groupby(agrupar_por).agg(
         [
             pl.col("DIAG1").count().alias("n_egresos"),
-            pl.col("DIAS_ESTADA").mean().alias("dias_estada_promedio"),
+            pl.col("DIAS_ESTADA").sum().alias("dias_estada_totales"),
             pl.col("INTERV_Q").sum().alias("n_int_q"),
             pl.col("CONDICION_EGRESO").sum().alias("n_muertos"),
         ]
+    )
+
+    metricas_agregadas = metricas_agregadas.with_columns(
+        (pl.col("dias_estada_totales") / pl.col("n_egresos")).alias("dias_estada_promedio")
     )
 
     return metricas_agregadas
