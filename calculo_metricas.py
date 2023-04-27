@@ -95,6 +95,20 @@ UNIR_EN = [
 
 
 def obtener_metricas_egresos(df, agrupar_por):
+    """Funcion que permite calcular la cantidad de egresos, dias estada, intervenciones quirurgicas,
+    y muertos par diagnostico. Este calculo se realiza con el nivel de agregacion que especifique
+    el usuario
+
+    :param df: Es la tabla de datos de egresos hospitalarios que se quiera analizar
+    :type df: pl.DataFrame o pl.LazyFrame
+
+    :param agrupar_por: Es la agrupacion con la que quiere trabajar el usuario
+    :type agrupar_por: str
+
+    :returns: Retorna el DataFrame con las metricas de numero de egresos, dias estada, intervenciones
+    quirurgicas y cantidad de muertos por diagnostico y agrupacion
+    :rtype: pl.DataFrame o pl.LazyFrame
+    """
     metricas_agregadas = df.groupby(agrupar_por).agg(
         [
             pl.col("DIAG1").count().alias("n_egresos"),
