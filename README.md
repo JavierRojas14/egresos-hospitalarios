@@ -5,7 +5,16 @@ del Departamento de Estadísticas e Información de Salud de Chile.
 
 ## Description
 
-An in-depth paragraph about your project and overview of use.
+Este es un programa que permite analizar los datos de Egresos Hospitalarios del Departamento
+de Estadísticas e Información de Salud de Chile. Todo el programa está contenido en Jupyter
+Notebooks.
+
+En específico, el programa permite obtener la cantidad de Egresos Hospitalarios, la cantidad
+de DIAS ESTADA, la cantidad de intervenciones quirúrgicas y la cantidad de muertos por diagnóstico
+clínico.
+
+Las métricas obtenidas se pueden desglosar según la agrupación que quiera el usuario. En el caso
+de ejemplo, se hizo un desglose por Año, Establecimiento de Salud y Diagnóstico clínico.
 
 ## Getting Started
 
