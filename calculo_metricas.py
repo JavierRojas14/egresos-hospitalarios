@@ -126,6 +126,12 @@ def obtener_metricas_egresos(df, agrupar_por):
 
 
 def obtener_diccionario_estratos(df_nacional, hospital_interno):
+    """Funcion que permite obtener un diccionario de los hospitales pertenecientes a distintos
+    estratos Chilenos. Los estratos son: Hospitales Publicos y Hospitales Privados. Ademas, adjunta
+    los codigos de hospitales nacionales, grd y el hospital a analizar el ranking.
+
+    
+    """
     df_publicos = df_nacional.filter(pl.col("PERTENENCIA_ESTABLECIMIENTO_SALUD") == PERTENECE_SNSS)
     df_privados = df_nacional.filter(
         (pl.col("PERTENENCIA_ESTABLECIMIENTO_SALUD") == NO_PERTENECE_SNSS)
