@@ -32,6 +32,7 @@ de ejemplo, se hizo un desglose por Año, Establecimiento de Salud y Diagnóstic
 
 * How to run the program
 * Step-by-step bullets
+
 ```
 code blocks for commands
 ```
@@ -39,6 +40,7 @@ code blocks for commands
 ## Help
 
 Any advise for common problems or issues.
+
 ```
 command to run if program contains helper info
 ```
@@ -53,10 +55,10 @@ ex. [@DomPizzie](https://twitter.com/dompizzie)
 ## Version History
 
 * 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
+  * Various bug fixes and optimizations
+  * See [commit change]() or See [release history]()
 * 0.1
-    * Initial Release
+  * Initial Release
 
 ## License
 
@@ -65,6 +67,7 @@ This project is licensed under the [NAME HERE] License - see the LICENSE.md file
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
+
 * [awesome-readme](https://github.com/matiassingers/awesome-readme)
 * [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
 * [dbader](https://github.com/dbader/readme-template)
