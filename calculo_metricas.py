@@ -1,3 +1,12 @@
+"""Modulo para calcular diversas metricas para los Egresos Hospitalarios de la base de datos del
+Departamento de Estadisticas e Informacion de Salud de Chile
+
+Estas funciones son utilizadas en conjunto con el archivo Jupyter Notebook para realizar los
+diversos analisis
+
+Este script necesita que se utilice polars para funcionar
+"""
+
 import polars as pl
 
 
