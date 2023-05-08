@@ -117,7 +117,7 @@ def agregar_columnas_localizacion(df):
         ("Region " + pl.col("GLOSA_REGION_RESIDENCIA") + ", Chile").alias("region_pais")
     )
 
-    tmp = df.with_columns(
+    tmp = tmp.with_columns(
         (pl.col("GLOSA_COMUNA_RESIDENCIA") + ", " + pl.col("region_pais")).alias(
             "comuna_region_pais"
         )
