@@ -88,7 +88,6 @@ UNIR_EN = [
     "DIAG1",
     "n_egresos",
     "dias_estada_totales",
-    "dias_estada_promedio",
     "n_int_q",
     "n_muertos",
 ]
