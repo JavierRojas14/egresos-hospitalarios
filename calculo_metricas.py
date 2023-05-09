@@ -118,10 +118,6 @@ def obtener_metricas_egresos(df, agrupar_por):
         ]
     )
 
-    metricas_agregadas = metricas_agregadas.with_columns(
-        (pl.col("dias_estada_totales") / pl.col("n_egresos")).alias("dias_estada_promedio")
-    )
-
     return metricas_agregadas
 
 
