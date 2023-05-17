@@ -1,10 +1,26 @@
-"""Modulo para calcular diversas metricas para los Egresos Hospitalarios de la base de datos del
-Departamento de Estadisticas e Informacion de Salud de Chile
+"""
+This module provides functions for analyzing DEIS's public databases for hospital discharges in 
+Chile using the Polars library.
 
-Estas funciones son utilizadas en conjunto con el archivo Jupyter Notebook para realizar los
-diversos analisis
+Module Constants:
+    - PERTENECE_SNSS: Represents "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS".
+    - NO_PERTENECE_SNSS: Represents "No Pertenecientes al Sistema Nacional de Servicios de Salud, 
+    SNSS".
+    - HOSPITALES_GRD: A list of hospital codes.
 
-Este script necesita que se utilice polars para funcionar
+Module Functions:
+    - obtener_metricas_egresos: Calculates metrics for hospital discharges, such as the number of
+    discharges, total length of stay, surgical interventions, and number of deaths per diagnosis
+    at the specified aggregation level.
+    - obtener_diccionario_estratos: Obtains a dictionary of hospitals belonging to different 
+    Chilean strata, including public and private hospitals, national hospital codes, 'grd' 
+    hospitals, and the hospital being analyzed.
+    - obtener_metricas_para_un_estrato: Obtains metrics for a specific stratum in the DataFrame 
+    based on the analysis variable and ranking subgroup.
+    - obtener_resumen_por_estratos: Obtains a summary of metrics for different strata in the 
+    DataFrame based on provided dictionaries, variables to rank, and ranking subgroup.
+    - left_join_consecutivo: Performs a left join operation on two DataFrames based on a specified
+    column.
 """
 
 import polars as pl
@@ -240,8 +256,8 @@ def obtener_resumen_por_estratos(df, dict_estratos, variables_a_rankear, subgrup
 
 def left_join_consecutivo(left, right):
     """
-    Perform a left join operation on the 'left' and 'right' DataFrames based on the specified column.
-    The columns to join are defined in the global variable UNIR_EN.
+    Perform a left join operation on the 'left' and 'right' DataFrames based on the specified 
+    column. The columns to join are defined in the global variable UNIR_EN.
 
     :param left: The left DataFrame.
     :type left: pl.DataFrame
