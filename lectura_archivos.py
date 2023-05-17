@@ -66,6 +66,18 @@ MAPPING_SOCIODEMOGRAFICO = {
 
 
 def mappear_columnas(df, dict_mapeo):
+    """
+    Map columns in the DataFrame based on a mapping dictionary.
+
+    :param df: The input DataFrame.
+    :type df: pl.DataFrame
+
+    :param dict_mapeo: A dictionary containing the mapping for columns.
+    :type dict_mapeo: dict
+
+    :return: The DataFrame with mapped columns.
+    :rtype: pl.DataFrame
+    """
     tmp = df.clone()
 
     for variable, dict_cambio in dict_mapeo.items():
@@ -75,6 +87,18 @@ def mappear_columnas(df, dict_mapeo):
 
 
 def obtener_diagnosticos_unicos_de_hospital(df, hospital_a_analizar):
+    """
+    Get unique diagnoses from a specific hospital in the DataFrame.
+
+    :param df: The input DataFrame.
+    :type df: pl.DataFrame
+
+    :param hospital_a_analizar: The ID of the hospital to analyze.
+    :type hospital_a_analizar: int
+
+    :return: A series containing the unique diagnoses.
+    :rtype: pl.Series
+    """
     diags_hospital = (
         df.filter(pl.col("ESTABLECIMIENTO_SALUD") == hospital_a_analizar)
         .select(pl.col("DIAG1"))
@@ -85,6 +109,17 @@ def obtener_diagnosticos_unicos_de_hospital(df, hospital_a_analizar):
 
 
 def leer_archivos(filtro_hospital=11203):
+    """
+    Read and process the DEIS's public databases from the input directory, filtering by a specific
+    hospital.
+
+    :param filtro_hospital: The ID of the hospital to filter by. Defaults to 11203
+    (Instituto Nacional del Torax's code).
+    :type filtro_hospital: int, optional
+
+    :return: The processed DataFrame filtered by the specified hospital.
+    :rtype: pl.DataFrame
+    """
     with pl.StringCache():
         df_nacional = pl.scan_csv("input/utf-8/*.csv", separator=";")
         diags_torax = (
@@ -100,6 +135,12 @@ def leer_archivos(filtro_hospital=11203):
 
 
 def leer_cie():
+    """
+    Read the CIE-10 codes from an Excel file and preprocess them.
+
+    :return: The processed CIE-10 codes DataFrame.
+    :rtype: pl.DataFrame
+    """
     cie = pl.read_excel("input/CIE-10.xlsx").with_columns(
         pl.col("Código").str.replace(".", "", literal=True).str.ljust(4, "X").alias("DIAG1")
     )
@@ -113,6 +154,15 @@ def leer_cie():
 
 
 def agregar_columnas_localizacion(df):
+    """
+    Add location-related columns to the DataFrame based on region and comuna information.
+
+    :param df: The input DataFrame.
+    :type df: pl.DataFrame
+
+    :return: The DataFrame with added location-related columns.
+    :rtype: pl.DataFrame
+    """
     tmp = df.with_columns(
         ("Region " + pl.col("GLOSA_REGION_RESIDENCIA") + ", Chile").alias("region_pais")
     )
@@ -127,6 +177,15 @@ def agregar_columnas_localizacion(df):
 
 
 def agregar_categorizacion_edad(df):
+    """
+    Add age category column to the DataFrame based on age in years.
+
+    :param df: The input DataFrame.
+    :type df: pl.DataFrame
+
+    :return: The DataFrame with added age category column.
+    :rtype: pl.DataFrame
+    """
     tmp = df.with_columns(
         (df.get_column("EDAD_A_OS"))
         .cut(bins=range(0, 101, 10), maintain_order=True)
@@ -137,6 +196,16 @@ def agregar_categorizacion_edad(df):
 
 
 def obtener_df_inicial_sociodemografico(filtro_hospital=112103):
+    """
+    Obtain the initial sociodemographic DataFrame for a specific hospital.
+
+    :param filtro_hospital: The ID of the hospital to filter by. Defaults to 112103
+    (Instituto Nacional del Torax's code).
+    :type filtro_hospital: int, optional
+
+    :return: The initial sociodemographic DataFrame for the specified hospital.
+    :rtype: pl.DataFrame
+    """
     with pl.StringCache():
         df_socio = pl.scan_csv("input/utf-8/*.csv", separator=";", dtypes=DICT_VARIABLES).filter(
             pl.col("ESTABLECIMIENTO_SALUD") == filtro_hospital
