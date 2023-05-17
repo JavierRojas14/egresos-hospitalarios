@@ -1,3 +1,30 @@
+"""
+This module contains functions for data processing and analysis.
+
+It utilizes the 'polars' library for working with DataFrames.
+
+Module Constants:
+    DICT_VARIABLES (dict): A dictionary mapping variable names to their corresponding data types.
+    MAPPING_METRICAS_EGRESOS (dict): A dictionary mapping column names to their mapping dictionaries 
+    for column mapping.
+    MAPPING_SOCIODEMOGRAFICO (dict): A dictionary mapping column names to their mapping dictionaries 
+    for sociodemographic analysis.
+
+Module Functions:
+    - mappear_columnas: Map columns in the DataFrame based on a mapping dictionary.
+    - obtener_diagnosticos_unicos_de_hospital: Get unique diagnoses from a specific hospital in the 
+    DataFrame.
+    - leer_archivos: Read and process the DEIS's public databases from the input directory, 
+    filtering by a specific hospital.
+    - leer_cie: Read the CIE-10 codes from an Excel file and preprocess them.
+    - agregar_columnas_localizacion: Add location-related columns to the DataFrame based on 
+    region and comuna information.
+    - agregar_categorizacion_edad: Add age category column to the DataFrame based on age in years.
+    - obtener_df_inicial_sociodemografico: Obtain the initial sociodemographic DataFrame for a 
+    specific hospital.
+"""
+
+
 import polars as pl
 
 DICT_VARIABLES = {
