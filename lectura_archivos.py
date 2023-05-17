@@ -1,5 +1,6 @@
 """
-This module contains functions for data processing and analysis.
+This module contains functions for data processing and analysis of the 
+DEIS's public databases for hospital discharges in Chile.
 
 It utilizes the 'polars' library for working with DataFrames.
 
@@ -14,14 +15,15 @@ Module Functions:
     - mappear_columnas: Map columns in the DataFrame based on a mapping dictionary.
     - obtener_diagnosticos_unicos_de_hospital: Get unique diagnoses from a specific hospital in the 
     DataFrame.
-    - leer_archivos: Read and process the DEIS's public databases from the input directory, 
+    - leer_archivos: Read and process the DEIS's public databases for hospital discharges in Chile 
+    from the input directory, 
     filtering by a specific hospital.
     - leer_cie: Read the CIE-10 codes from an Excel file and preprocess them.
     - agregar_columnas_localizacion: Add location-related columns to the DataFrame based on 
     region and comuna information.
     - agregar_categorizacion_edad: Add age category column to the DataFrame based on age in years.
     - obtener_df_inicial_sociodemografico: Obtain the initial sociodemographic DataFrame for a 
-    specific hospital.
+    specific hospital. It reads the DEIS's public databases for hospital discharges in Chile.
 """
 
 
@@ -137,8 +139,8 @@ def obtener_diagnosticos_unicos_de_hospital(df, hospital_a_analizar):
 
 def leer_archivos(filtro_hospital=11203):
     """
-    Read and process the DEIS's public databases from the input directory, filtering by a specific
-    hospital.
+    Read and process the DEIS's public databases for hospital discharges in Chile from the input
+    directory, filtering by a specific hospital.
 
     :param filtro_hospital: The ID of the hospital to filter by. Defaults to 11203
     (Instituto Nacional del Torax's code).
@@ -224,7 +226,8 @@ def agregar_categorizacion_edad(df):
 
 def obtener_df_inicial_sociodemografico(filtro_hospital=112103):
     """
-    Obtain the initial sociodemographic DataFrame for a specific hospital.
+    Obtain the initial sociodemographic DataFrame for a specific hospital. It reads the
+    DEIS's public databases for hospital discharges in Chile.
 
     :param filtro_hospital: The ID of the hospital to filter by. Defaults to 112103
     (Instituto Nacional del Torax's code).
