@@ -94,19 +94,21 @@ UNIR_EN = [
 
 
 def obtener_metricas_egresos(df, agrupar_por):
-    """Funcion que permite calcular la cantidad de egresos, dias estada, intervenciones quirurgicas,
-    y muertos par diagnostico. Este calculo se realiza con el nivel de agregacion que especifique
-    el usuario
+    """
+    Calculates the number of discharges, total length of stay, surgical interventions,
+    and number of deaths per diagnosis. This calculation is performed at the specified
+    aggregation level.
 
-    :param df: Es la tabla de datos de egresos hospitalarios que se quiera analizar
-    :type df: pl.DataFrame o pl.LazyFrame
+    :param df: The hospital discharge data table to be analyzed.
+    :type df: pl.DataFrame or pl.LazyFrame
 
-    :param agrupar_por: Es la agrupacion con la que quiere trabajar el usuario
+    :param agrupar_por: The grouping level to work with.
     :type agrupar_por: str
 
-    :returns: Retorna el DataFrame con las metricas de numero de egresos, dias estada, intervenciones
-    quirurgicas y cantidad de muertos por diagnostico y agrupacion
-    :rtype: pl.DataFrame o pl.LazyFrame
+    :returns: Returns a DataFrame with metrics including the number of discharges,
+    total length of stay, surgical interventions, and number of deaths per diagnosis
+    and grouping level.
+    :rtype: pl.DataFrame or pl.LazyFrame
     """
     metricas_agregadas = df.groupby(agrupar_por).agg(
         [
@@ -121,11 +123,19 @@ def obtener_metricas_egresos(df, agrupar_por):
 
 
 def obtener_diccionario_estratos(df_nacional, hospital_interno):
-    """Funcion que permite obtener un diccionario de los hospitales pertenecientes a distintos
-    estratos Chilenos. Los estratos son: Hospitales Publicos y Hospitales Privados. Ademas, adjunta
-    los codigos de hospitales nacionales, grd y el hospital a analizar el ranking.
+    """
+    Function that obtains a dictionary of hospitals belonging to different Chilean strata.
+    The strata are: Public Hospitals and Private Hospitals. Additionally, it includes
+    national hospital codes, 'grd' hospitals, and the hospital being analyzed in the ranking.
 
-    
+    :param df_nacional: The input DataFrame containing national hospital data.
+    :type df_nacional: pl.DataFrame
+
+    :param hospital_interno: The ID of the internal hospital to analyze.
+    :type hospital_interno: int
+
+    :return: A dictionary of hospitals belonging to different strata.
+    :rtype: dict
     """
     df_publicos = df_nacional.filter(pl.col("PERTENENCIA_ESTABLECIMIENTO_SALUD") == PERTENECE_SNSS)
     df_privados = df_nacional.filter(
@@ -155,6 +165,25 @@ def obtener_diccionario_estratos(df_nacional, hospital_interno):
 
 
 def obtener_metricas_para_un_estrato(df, glosa_estrato, variable_analisis, subgrupo_del_ranking):
+    """
+    Obtain metrics for a specific stratum in the DataFrame based on the analysis variable
+    and ranking subgroup.
+
+    :param df: The input DataFrame.
+    :type df: pl.DataFrame
+
+    :param glosa_estrato: The description of the stratum being analyzed.
+    :type glosa_estrato: str
+
+    :param variable_analisis: The variable to analyze.
+    :type variable_analisis: str
+
+    :param subgrupo_del_ranking: The subgroup for ranking.
+    :type subgrupo_del_ranking: list
+
+    :return: A DataFrame with the obtained metrics for the specific stratum.
+    :rtype: pl.DataFrame
+    """
     if glosa_estrato == "interno":
         subgrupo_del_ranking.remove("DIAG1")
 
@@ -176,6 +205,25 @@ def obtener_metricas_para_un_estrato(df, glosa_estrato, variable_analisis, subgr
 
 
 def obtener_resumen_por_estratos(df, dict_estratos, variables_a_rankear, subgrupo_del_ranking):
+    """
+    Obtain a summary of metrics for different strata in the DataFrame based on the provided 
+    dictionaries, variables to rank, and ranking subgroup.
+
+    :param df: The input DataFrame.
+    :type df: pl.DataFrame
+
+    :param dict_estratos: A dictionary containing the strata and their respective hospital codes.
+    :type dict_estratos: dict
+
+    :param variables_a_rankear: The variables to rank.
+    :type variables_a_rankear: list
+
+    :param subgrupo_del_ranking: The subgroup for ranking.
+    :type subgrupo_del_ranking: list
+
+    :return: A dictionary with the summary of metrics for different strata.
+    :rtype: dict
+    """
     for variable_analisis in variables_a_rankear:
         resultado_estrato = {}
 
@@ -191,4 +239,17 @@ def obtener_resumen_por_estratos(df, dict_estratos, variables_a_rankear, subgrup
 
 
 def left_join_consecutivo(left, right):
+    """
+    Perform a left join operation on the 'left' and 'right' DataFrames based on the specified column.
+    The columns to join are defined in the global variable UNIR_EN.
+
+    :param left: The left DataFrame.
+    :type left: pl.DataFrame
+
+    :param right: The right DataFrame.
+    :type right: pl.DataFrame
+
+    :return: The result of the left join operation.
+    :rtype: pl.DataFrame
+    """
     return left.join(right, how="left", on=UNIR_EN)
