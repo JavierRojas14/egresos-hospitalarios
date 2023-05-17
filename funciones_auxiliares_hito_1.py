@@ -1,8 +1,27 @@
-"""Funciones auxiliares para analizar la distribucion de datos en un DataFrame. Puede:
-
-- Analizar la distribucion de variables categoricas y numericas
-- Analizar valores faltantes
 """
+Auxiliary functions for analyzing data distribution in a DataFrame.
+
+This module provides functions to analyze the distribution of categorical and numerical variables,
+analyze missing values, visualize distribution plots, and explore correlations between variables.
+
+Functions:
+- separar_df_a_numericas_categoricas: Separates a DataFrame into numerical and categorical
+  variables.
+- graficar_distribucion_variable_numerica: Plots the distribution of a numerical variable.
+- analizar_distr_todas_las_variables_numericas: Analyzes the distribution of all numerical
+  variables.
+- graficar_distribucion_variable_categorica: Plots the distribution of a categorical variable.
+- analizar_dist_todas_las_variables_categoricas: Analyzes the distribution of all categorical
+  variables.
+- analizar_valores_faltantes: Analyzes missing values in a set of variables.
+- analizar_distribucion_y_faltantes_variables: Analyzes the distribution and missing values of
+  all variables in a DataFrame.
+- mostrar_perdida_de_datos: Displays the percentage of data lost when removing missing values
+  from a DataFrame.
+- analizar_correlacion_todas_las_variables: Analyzes the correlation between all variables in a
+  DataFrame.
+"""
+
 
 import pandas as pd
 
@@ -13,14 +32,14 @@ import missingno as msno
 
 
 def separar_df_a_numericas_categoricas(df):
-    """Esta funcion permite separar un DataFrame en sus variables categoricas (que están en formato
-    string u object) y las variables numéricas (que estén en algún formato numérico como int o
-    float)
+    """
+    Separates a DataFrame into numerical and categorical variables.
 
-    :param df: Es el DataFrame que se quiere separar
+    :param df: The DataFrame to be separated.
     :type df: pd.DataFrame
 
-    :returns: Una tupla con las variables numericas y categoricas
+    :return: A tuple containing a DataFrame with numerical variables and another with categorical
+        variables.
     :rtype: tuple
     """
     numericas = df.select_dtypes("number")
@@ -29,35 +48,38 @@ def separar_df_a_numericas_categoricas(df):
 
 
 def graficar_distribucion_variable_numerica(serie_numerica, nombre_grafico):
-    """Esta funcion permite graficar la distribución de una variable numérica con un histograma
-    y un gráfico de cajas y bigotes. Además, muestra la media en el histograma
+    """
+    Plots the distribution of a numerical variable.
 
-    :param serie_numerica: Es la Serie o el conjunto de datos de la variable numérica que se quiere
-    graficar
+    :param serie_numerica: The numerical series to be plotted.
     :type serie_numerica: pd.Series
 
-    :param nombre_grafico: Es el nombre que se le quiere poner al gráfico
+    :param nombre_grafico: The name of the plot.
     :type nombre_grafico: str
+
+    :return: None
     """
     fig, axis = plt.subplots(1, 2)
-    print('-----------------------------------------')
+    print("-----------------------------------------")
     sns.histplot(data=serie_numerica, ax=axis[0])
     axis[0].axvline(serie_numerica.mean(), color="tomato")
     sns.boxplot(data=serie_numerica, ax=axis[1])
 
     plt.title(nombre_grafico)
     plt.show()
-    print('-----------------------------------------')
+    print("-----------------------------------------")
 
 
 def analizar_distr_todas_las_variables_numericas(df_numericas):
-    """Función que permite iterar en todas las variables numéricas de un DataFrame para graficar
-    su distribución. Además, muestra las medidas de tendencia central.
-
-    :param df_numericas: Es el DataFrame que contiene todas las variables numéricas a analizar
-    :type df_numericas: pd.DataFrame
     """
-    if not(df_numericas.empty):
+    Analyzes the distribution of all numerical variables in a DataFrame.
+
+    :param df_numericas: The DataFrame with the numerical variables to be analyzed.
+    :type df_numericas: pd.DataFrame
+
+    :return: None
+    """
+    if not (df_numericas.empty):
         print("Analizando todas las variables numericas \n")
         display(df_numericas.describe())
 
@@ -66,36 +88,38 @@ def analizar_distr_todas_las_variables_numericas(df_numericas):
 
 
 def graficar_distribucion_variable_categorica(serie_categorica, nombre_grafico):
-    """Funcion que permite analizar la distribución y frecuencia de cada categoria dentro de una
-    variable categorica. Además, genera un gráfico de barras con la frecuencia y el valor de la
-    categoria en la variable. Este gráfico esta ordenado descendientemente.
+    """
+    Plots the distribution of a categorical variable.
 
-    :param serie_categorica: Es la pd.Series o conjunto de datos categoricos que se quieren analizar
+    :param serie_categorica: The categorical series to be plotted.
     :type serie_categorica: pd.Series
-
-    :param nombre_grafico: Es el título que se le quiere poner al gráfico
+    :param nombre_grafico: The name of the plot.
     :type nombre_grafico: str
+
+    :return: None
     """
     frecuencias = serie_categorica.value_counts()
     porcentajes = serie_categorica.value_counts("%")
     total = pd.DataFrame(
         {"Frecuencia": frecuencias, "Porcentaje": porcentajes}, index=frecuencias.index
     )
-    print('-----------------------------------------')
+    print("-----------------------------------------")
     display(total)
 
     sns.countplot(y=serie_categorica, order=frecuencias.index)
     plt.title(nombre_grafico)
     plt.show()
-    print('-----------------------------------------')
+    print("-----------------------------------------")
 
 
 def analizar_dist_todas_las_variables_categoricas(df_categoricas):
-    """Función que permite iterar en todas las variables categóricas de un DataFrame para graficar
-    su distribución.
+    """
+    Analyzes the distribution of all categorical variables in a DataFrame.
 
-    :param df_numericas: Es el DataFrame que contiene todas las variables categóricas a analizar
-    :type df_numericas: pd.DataFrame
+    :param df_categoricas: The DataFrame with the categorical variables to be analyzed.
+    :type df_categoricas: pd.DataFrame
+
+    :return: None
     """
     print("Analizando todas las variables categoricas \n")
     for columna_categorica, serie_categorica in df_categoricas.items():
@@ -103,12 +127,13 @@ def analizar_dist_todas_las_variables_categoricas(df_categoricas):
 
 
 def analizar_valores_faltantes(variables_a_analizar):
-    """Función que permite cuantificar la cantidad de valores faltantes en un DataFrame que se
-    quiera analizar. Muestra la cantidad y el porcentaje de valores faltantes por columna/variable
-    presente en la base de datos
+    """
+    Analyzes missing values in a set of variables.
 
-    :param variables_a_analizar: Es el conjunto de variables que se quieren analizar
+    :param variables_a_analizar: The DataFrame with the variables to be analyzed.
     :type variables_a_analizar: pd.DataFrame
+
+    :return: None
     """
     valores_faltantes = variables_a_analizar.isnull().sum()
     porcentaje_faltantes = round(valores_faltantes * 100 / len(variables_a_analizar), 2)
@@ -122,14 +147,13 @@ def analizar_valores_faltantes(variables_a_analizar):
 
 
 def analizar_distribucion_y_faltantes_variables(df):
-    """Función que permite analizar la distribucion de variables en un DataFrame. Esta función
-    clasifica y separa las variables en numéricas y categóricas. Luego, analiza y grafica la
-    distribución de ambos tipos de variables y finalmente analiza la cantidad
-    de valores faltantes.
+    """
+    Analyzes the distribution and missing values of all variables in a DataFrame.
 
-    :param df: Es la base de datos que contiene todas las variables que se quiere observar su
-    distribucion y valores faltantes
+    :param df: The DataFrame to be analyzed.
     :type df: pd.DataFrame
+
+    :return: None
     """
     numericas, categoricas = separar_df_a_numericas_categoricas(df)
     analizar_distr_todas_las_variables_numericas(numericas)
@@ -138,12 +162,13 @@ def analizar_distribucion_y_faltantes_variables(df):
 
 
 def mostrar_perdida_de_datos(df_completa):
-    """Función que cuantifica la cantidad y el porcentaje de datos perdidos cuando se utiliza
-    .dropna() en una base de datos de forma global.
+    """
+    Displays the percentage of data lost when removing missing values from a DataFrame.
 
-    :param df_completa: Base de datos que se quiere saber cuánto cambia cuando se utiliza
-    .dropna() de forma global.
+    :param df_completa: The complete DataFrame.
     :type df_completa: pd.DataFrame
+
+    :return: None
     """
     cantidad_valores_originales = len(df_completa)
     cantidad_valores_droppeados = len(df_completa.dropna())
@@ -157,10 +182,13 @@ def mostrar_perdida_de_datos(df_completa):
 
 
 def analizar_correlacion_todas_las_variables(df_variables):
-    """Funcion que calcula y grafica la correlacion entre variables en una base de datos
+    """
+    Analyzes the correlation between all variables in a DataFrame.
 
-    :param df_variables: Es la base de datos que contiene las variables a analizar
+    :param df_variables: The DataFrame with the variables to be analyzed.
     :type df_variables: pd.DataFrame
+
+    :return: None
     """
     corr = df_variables.corr()
     sns.heatmap(corr, cmap="Blues", annot=True)
