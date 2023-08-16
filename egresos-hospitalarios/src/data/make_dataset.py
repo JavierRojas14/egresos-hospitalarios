@@ -7,31 +7,31 @@ from dotenv import find_dotenv, load_dotenv
 import polars as pl
 
 DICT_VARIABLES = {
-    "ESTABLECIMIENTO_SALUD": pl.Int32,
+    "ESTABLECIMIENTO_SALUD": pl.Int64,
     "GLOSA_ESTABLECIMIENTO_SALUD": pl.Categorical,
     "PERTENENCIA_ESTABLECIMIENTO_SALUD": pl.Categorical,
-    "SEREMI": pl.Int8,
-    "SERVICIO_DE_SALUD": pl.Int8,
-    "SEXO": pl.Int8,
-    "EDAD_CANT": pl.Int8,
-    "TIPO_EDAD": pl.Int8,
-    "EDAD_A_OS": pl.Int8,
-    "PUEBLO_ORIGINARIO": pl.Int8,
-    "PAIS_ORIGEN": pl.Int16,
+    "SEREMI": pl.Int64,
+    "SERVICIO_DE_SALUD": pl.Int64,
+    "SEXO": pl.Int64,
+    "EDAD_CANT": pl.Int64,
+    "TIPO_EDAD": pl.Int64,
+    "EDAD_A_OS": pl.Int64,
+    "PUEBLO_ORIGINARIO": pl.Int64,
+    "PAIS_ORIGEN": pl.Int64,
     "GLOSA_COMUNA_RESIDENCIA": pl.Categorical,
     "REGION_RESIDENCIA": pl.Categorical,
     "GLOSA_REGION_RESIDENCIA": pl.Categorical,
-    "PREVISION": pl.Int8,
+    "PREVISION": pl.Int64,
     "BENEFICIARIO": pl.Categorical,
-    "MODALIDAD": pl.Int8,
-    "PROCEDENCIA": pl.Int8,
-    "ANO_EGRESO": pl.Int16,
+    "MODALIDAD": pl.Int64,
+    "PROCEDENCIA": pl.Int64,
+    "ANO_EGRESO": pl.Int64,
     "FECHA_EGRESO": pl.Date,
-    "AREA_FUNCIONAL_EGRESO": pl.Int16,
-    "DIAS_ESTADA": pl.Int16,
-    "CONDICION_EGRESO": pl.Int8,
-    "INTERV_Q": pl.Int8,
-    "CODIGO_INTERV_Q_PPAL": pl.Int32,
+    "AREA_FUNCIONAL_EGRESO": pl.Int64,
+    "DIAS_ESTADA": pl.Int64,
+    "CONDICION_EGRESO": pl.Int64,
+    "INTERV_Q": pl.Int64,
+    "CODIGO_INTERV_Q_PPAL": pl.Int64,
     "PROCED": pl.Categorical,
     "CODIGO_PROCED_PPAL": pl.Categorical,
     "GLOSA_PROCED_PPAL": pl.Categorical,
@@ -70,6 +70,9 @@ MAPPING_SOCIODEMOGRAFICO = {
     },
 }
 
+VALORES_NULOS = {
+    "REGION_RESIDENCIA": "Extranjero",
+}
 
 def leer_egresos_deis(ruta_carpeta_contenedora):
     """
