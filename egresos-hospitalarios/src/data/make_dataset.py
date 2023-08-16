@@ -93,7 +93,7 @@ def leer_egresos_deis(ruta_carpeta_contenedora):
         df_nacional = mappear_columnas(df_nacional, MAPPING_METRICAS_EGRESOS)
         df_nacional = mappear_columnas(df_nacional, MAPPING_SOCIODEMOGRAFICO)
         df_nacional = agregar_columnas_region_y_comuna(df_nacional)
-        # df_nacional = agregar_categorizacion_edad(df_nacional)
+        df_nacional = agregar_categorizacion_edad(df_nacional)
 
         return df_nacional
 
@@ -153,9 +153,7 @@ def agregar_categorizacion_edad(df):
     :rtype: pl.DataFrame
     """
     tmp = df.with_columns(
-        (df.get_column("EDAD_A_OS"))
-        .cut(bins=range(0, 101, 10), maintain_order=True)
-        .select(pl.col("category").alias("EDAD_CATEGORIA"))
+        EDAD_CATEGORIA=pl.col("EDAD_A_OS").cut(range(0, 121, 10))
     )
 
     return tmp
