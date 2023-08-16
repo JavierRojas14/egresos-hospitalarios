@@ -70,7 +70,8 @@ MAPPING_SOCIODEMOGRAFICO = {
     },
 }
 
-def leer_archivos(ruta_carpeta_contenedora):
+
+def leer_egresos_deis(ruta_carpeta_contenedora):
     """
     Read and process the DEIS's public databases for hospital discharges in Chile from the input
     directory, filtering by a specific hospital.
@@ -83,11 +84,16 @@ def leer_archivos(ruta_carpeta_contenedora):
     :rtype: pl.DataFrame
     """
     with pl.StringCache():
-        df_nacional = pl.scan_csv(f"{ruta_carpeta_contenedora}/*.csv", separator=";")
+        df_nacional = pl.scan_csv(
+            f"{ruta_carpeta_contenedora}/*.csv", separator=";", dtypes=DICT_VARIABLES
+        )
         df_nacional = mappear_columnas(df_nacional, MAPPING_METRICAS_EGRESOS)
+        df_nacional = mappear_columnas(df_nacional, MAPPING_SOCIODEMOGRAFICO)
+        df_nacional = agregar_columnas_region_y_comuna(df_nacional)
+        # df_nacional = agregar_categorizacion_edad(df_nacional)
 
         return df_nacional
-    
+
 
 def mappear_columnas(df, dict_mapeo):
     """
@@ -109,6 +115,49 @@ def mappear_columnas(df, dict_mapeo):
 
     return tmp
 
+
+def agregar_columnas_region_y_comuna(df):
+    """
+    Add location-related columns to the DataFrame based on region and comuna information.
+
+    :param df: The input DataFrame.
+    :type df: pl.DataFrame
+
+    :return: The DataFrame with added location-related columns.
+    :rtype: pl.DataFrame
+    """
+    tmp = df.with_columns(
+        ("Region " + pl.col("GLOSA_REGION_RESIDENCIA") + ", Chile").alias("region_pais")
+    )
+
+    tmp = tmp.with_columns(
+        (pl.col("GLOSA_COMUNA_RESIDENCIA") + ", " + pl.col("region_pais")).alias(
+            "comuna_region_pais"
+        )
+    )
+
+    return tmp
+
+
+def agregar_categorizacion_edad(df):
+    """
+    Add age category column to the DataFrame based on age in years.
+
+    :param df: The input DataFrame.
+    :type df: pl.DataFrame
+
+    :return: The DataFrame with added age category column.
+    :rtype: pl.DataFrame
+    """
+    tmp = df.with_columns(
+        (df.get_column("EDAD_A_OS"))
+        .cut(bins=range(0, 101, 10), maintain_order=True)
+        .select(pl.col("category").alias("EDAD_CATEGORIA"))
+    )
+
+    return tmp
+
+
 @click.command()
 @click.argument("input_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path())
@@ -118,6 +167,10 @@ def main(input_filepath, output_filepath):
     """
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
+
+    with pl.StringCache():
+        df_nacional = leer_egresos_deis(input_filepath).collect()
+        df_nacional.write_csv(f"{output_filepath}/egresos_procesados.csv")
 
 
 if __name__ == "__main__":
