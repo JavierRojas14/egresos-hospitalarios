@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import click
 import logging
 from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
 
+import click
 import polars as pl
+from dotenv import find_dotenv, load_dotenv
 
 DICT_VARIABLES = {
     "ESTABLECIMIENTO_SALUD": pl.Int64,
@@ -73,6 +73,7 @@ MAPPING_SOCIODEMOGRAFICO = {
 VALORES_NULOS = {
     "REGION_RESIDENCIA": "Extranjero",
 }
+
 
 def leer_egresos_deis(ruta_carpeta_contenedora):
     """
@@ -152,9 +153,7 @@ def agregar_categorizacion_edad(df):
     :return: The DataFrame with added age category column.
     :rtype: pl.DataFrame
     """
-    tmp = df.with_columns(
-        EDAD_CATEGORIA=pl.col("EDAD_A_OS").cut(range(0, 121, 10))
-    )
+    tmp = df.with_columns(EDAD_CATEGORIA=pl.col("EDAD_A_OS").cut(range(0, 121, 10)))
 
     return tmp
 
