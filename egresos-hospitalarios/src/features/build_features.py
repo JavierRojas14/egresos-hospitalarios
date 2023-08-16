@@ -24,6 +24,7 @@ Module Functions:
 """
 
 import polars as pl
+import pandas as pd
 
 
 PERTENECE_SNSS = "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS"
@@ -269,3 +270,7 @@ def left_join_consecutivo(left, right):
     :rtype: pl.DataFrame
     """
     return left.join(right, how="left", on=UNIR_EN)
+
+def leer_cie():
+    df = pl.read_excel("../data/external/CIE-10 - sin_puntos_y_X.xlsx")
+    return df
