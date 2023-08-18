@@ -25,6 +25,7 @@ Module Functions:
 
 import polars as pl
 import pandas as pd
+from functools import reduce
 
 
 PERTENECE_SNSS = "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS"
@@ -154,20 +155,28 @@ def obtener_diccionario_estratos(df_nacional, hospital_interno):
     :return: A dictionary of hospitals belonging to different strata.
     :rtype: dict
     """
-    df_publicos = df_nacional.filter(pl.col("PERTENENCIA_ESTABLECIMIENTO_SALUD") == PERTENECE_SNSS)
+    df_publicos = df_nacional.filter(
+        pl.col("PERTENENCIA_ESTABLECIMIENTO_SALUD") == PERTENECE_SNSS
+    )
     df_privados = df_nacional.filter(
         (pl.col("PERTENENCIA_ESTABLECIMIENTO_SALUD") == NO_PERTENECE_SNSS)
         | (pl.col("ESTABLECIMIENTO_SALUD") == hospital_interno)
     )
 
     codigos_nacionales = (
-        df_nacional.select(pl.col("ESTABLECIMIENTO_SALUD")).unique().collect(streaming=True)
+        df_nacional.select(pl.col("ESTABLECIMIENTO_SALUD"))
+        .unique()
+        .collect(streaming=True)
     )
     codigos_publicos = (
-        df_publicos.select(pl.col("ESTABLECIMIENTO_SALUD")).unique().collect(streaming=True)
+        df_publicos.select(pl.col("ESTABLECIMIENTO_SALUD"))
+        .unique()
+        .collect(streaming=True)
     )
     codigos_privados = (
-        df_privados.select(pl.col("ESTABLECIMIENTO_SALUD")).unique().collect(streaming=True)
+        df_privados.select(pl.col("ESTABLECIMIENTO_SALUD"))
+        .unique()
+        .collect(streaming=True)
     )
 
     diccionario_estratos = {
@@ -181,7 +190,9 @@ def obtener_diccionario_estratos(df_nacional, hospital_interno):
     return diccionario_estratos
 
 
-def obtener_metricas_para_un_estrato(df, glosa_estrato, variable_analisis, subgrupo_del_ranking):
+def obtener_metricas_para_un_estrato(
+    df, glosa_estrato, variable_analisis, subgrupo_del_ranking
+):
     """
     Obtain metrics for a specific stratum in the DataFrame based on the analysis variable
     and ranking subgroup.
@@ -216,14 +227,18 @@ def obtener_metricas_para_un_estrato(df, glosa_estrato, variable_analisis, subgr
         (pl.col("n_egresos").sum().over(subgrupo_del_ranking)).alias(var_total),
     )
 
-    resumen = resumen.with_columns((pl.col("n_egresos") / pl.col(var_total)).alias(var_porc))
+    resumen = resumen.with_columns(
+        (pl.col("n_egresos") / pl.col(var_total)).alias(var_porc)
+    )
 
     return resumen
 
 
-def obtener_resumen_por_estratos(df, dict_estratos, variables_a_rankear, subgrupo_del_ranking):
+def obtener_resumen_por_estratos(
+    df, dict_estratos, variables_a_rankear, subgrupo_del_ranking
+):
     """
-    Obtain a summary of metrics for different strata in the DataFrame based on the provided 
+    Obtain a summary of metrics for different strata in the DataFrame based on the provided
     dictionaries, variables to rank, and ranking subgroup.
 
     :param df: The input DataFrame.
@@ -245,7 +260,9 @@ def obtener_resumen_por_estratos(df, dict_estratos, variables_a_rankear, subgrup
         resultado_estrato = {}
 
         for glosa_estrato, codigos_en_estrato in dict_estratos.items():
-            df_estrato = df.filter(pl.col("ESTABLECIMIENTO_SALUD").is_in(codigos_en_estrato))
+            df_estrato = df.filter(
+                pl.col("ESTABLECIMIENTO_SALUD").is_in(codigos_en_estrato)
+            )
             resumen = obtener_metricas_para_un_estrato(
                 df_estrato, glosa_estrato, variable_analisis, subgrupo_del_ranking
             )
@@ -257,7 +274,7 @@ def obtener_resumen_por_estratos(df, dict_estratos, variables_a_rankear, subgrup
 
 def left_join_consecutivo(left, right):
     """
-    Perform a left join operation on the 'left' and 'right' DataFrames based on the specified 
+    Perform a left join operation on the 'left' and 'right' DataFrames based on the specified
     column. The columns to join are defined in the global variable UNIR_EN.
 
     :param left: The left DataFrame.
@@ -271,6 +288,70 @@ def left_join_consecutivo(left, right):
     """
     return left.join(right, how="left", on=UNIR_EN)
 
-def leer_cie():
-    df = pl.read_excel("../data/external/CIE-10 - sin_puntos_y_X.xlsx")
-    return df
+
+def leer_y_unir_cie(df_a_unir):
+    """This is a function that reads and joins the ICD-10 dictionary to a dataframe.
+    The column to join must be called "DIAG1"
+
+    Args:
+        df_a_unir (DataFrame): The DataFrame to join the ICD-10 dictionary
+
+    Returns:
+        DataFrame: The DataFrame with the joined ICD-10 dictionary
+    """
+    cie = pl.read_excel("../data/external/CIE-10 - sin_puntos_y_X.xlsx").with_columns(
+        pl.col("Código").alias("DIAG1")
+    )
+    df_unida = df_a_unir.join(cie, how="left", on="DIAG1")
+
+    return df_unida
+
+
+def agregar_ranking_estratos(
+    df_metricas,
+    estratos_a_analizar,
+    vars_a_ocupar_para_rankear,
+    vars_para_agrupar_en_ranking,
+):
+    metricas_por_estrato = obtener_resumen_por_estratos(
+        df_metricas,
+        estratos_a_analizar,
+        vars_a_ocupar_para_rankear,
+        vars_para_agrupar_en_ranking,
+    )
+
+    orden_final_cols = [
+        "ANO_EGRESO",
+        "ESTABLECIMIENTO_SALUD",
+        "GLOSA_ESTABLECIMIENTO_SALUD",
+        "Capítulo",
+        "Sección",
+        "Categoría",
+        "Descripción",
+        "DIAG1",
+        "n_egresos",
+        "dias_estada_totales",
+        "n_int_q",
+        "n_muertos",
+        "ranking_nacionales_n_egresos",
+        "total_nacionales_n_egresos",
+        "%_nacionales_n_egresos",
+        "ranking_publicos_n_egresos",
+        "total_publicos_n_egresos",
+        "%_publicos_n_egresos",
+        "ranking_privados_n_egresos",
+        "total_privados_n_egresos",
+        "%_privados_n_egresos",
+        "ranking_grd_n_egresos",
+        "total_grd_n_egresos",
+        "%_grd_n_egresos",
+        "ranking_interno_n_egresos",
+        "total_interno_n_egresos",
+        "%_interno_n_egresos",
+    ]
+
+    ranking_nacional = reduce(left_join_consecutivo, metricas_por_estrato.values())
+    ranking_nacional_con_cie = leer_y_unir_cie(ranking_nacional)
+    ranking_nacional_con_cie = ranking_nacional_con_cie.select(orden_final_cols)
+
+    return ranking_nacional_con_cie
