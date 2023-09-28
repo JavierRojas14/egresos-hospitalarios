@@ -19,7 +19,7 @@ DICT_VARIABLES = {
     "PUEBLO_ORIGINARIO": pl.Int64,
     "PAIS_ORIGEN": pl.Int64,
     "GLOSA_COMUNA_RESIDENCIA": pl.Categorical,
-    "REGION_RESIDENCIA": pl.Categorical,
+    "REGION_RESIDENCIA": pl.Int32,
     "GLOSA_REGION_RESIDENCIA": pl.Categorical,
     "PREVISION": pl.Int64,
     "BENEFICIARIO": pl.Categorical,
@@ -72,6 +72,7 @@ MAPPING_SOCIODEMOGRAFICO = {
 
 VALORES_NULOS = {
     "REGION_RESIDENCIA": "Extranjero",
+    "FECHA_EGRESO": "",
 }
 
 
@@ -92,7 +93,7 @@ def leer_egresos_deis(ruta_carpeta_contenedora):
             f"{ruta_carpeta_contenedora}/*.csv",
             separator=";",
             dtypes=DICT_VARIABLES,
-            null_values={"FECHA_EGRESO": ""},
+            null_values=VALORES_NULOS,
         )
         df_nacional = mappear_columnas(df_nacional, MAPPING_METRICAS_EGRESOS)
         df_nacional = mappear_columnas(df_nacional, MAPPING_SOCIODEMOGRAFICO)
