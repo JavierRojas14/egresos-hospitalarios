@@ -89,7 +89,10 @@ def leer_egresos_deis(ruta_carpeta_contenedora):
     """
     with pl.StringCache():
         df_nacional = pl.scan_csv(
-            f"{ruta_carpeta_contenedora}/*.csv", separator=";", dtypes=DICT_VARIABLES
+            f"{ruta_carpeta_contenedora}/*.csv",
+            separator=";",
+            dtypes=DICT_VARIABLES,
+            null_values={"FECHA_EGRESO": ""},
         )
         df_nacional = mappear_columnas(df_nacional, MAPPING_METRICAS_EGRESOS)
         df_nacional = mappear_columnas(df_nacional, MAPPING_SOCIODEMOGRAFICO)
