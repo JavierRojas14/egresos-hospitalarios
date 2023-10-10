@@ -155,28 +155,20 @@ def obtener_diccionario_estratos(df_nacional, hospital_interno):
     :return: A dictionary of hospitals belonging to different strata.
     :rtype: dict
     """
-    df_publicos = df_nacional.filter(
-        pl.col("PERTENENCIA_ESTABLECIMIENTO_SALUD") == PERTENECE_SNSS
-    )
+    df_publicos = df_nacional.filter(pl.col("PERTENENCIA_ESTABLECIMIENTO_SALUD") == PERTENECE_SNSS)
     df_privados = df_nacional.filter(
         (pl.col("PERTENENCIA_ESTABLECIMIENTO_SALUD") == NO_PERTENECE_SNSS)
         | (pl.col("ESTABLECIMIENTO_SALUD") == hospital_interno)
     )
 
     codigos_nacionales = (
-        df_nacional.select(pl.col("ESTABLECIMIENTO_SALUD"))
-        .unique()
-        .collect(streaming=True)
+        df_nacional.select(pl.col("ESTABLECIMIENTO_SALUD")).unique().collect(streaming=True)
     )
     codigos_publicos = (
-        df_publicos.select(pl.col("ESTABLECIMIENTO_SALUD"))
-        .unique()
-        .collect(streaming=True)
+        df_publicos.select(pl.col("ESTABLECIMIENTO_SALUD")).unique().collect(streaming=True)
     )
     codigos_privados = (
-        df_privados.select(pl.col("ESTABLECIMIENTO_SALUD"))
-        .unique()
-        .collect(streaming=True)
+        df_privados.select(pl.col("ESTABLECIMIENTO_SALUD")).unique().collect(streaming=True)
     )
 
     diccionario_estratos = {
@@ -190,9 +182,7 @@ def obtener_diccionario_estratos(df_nacional, hospital_interno):
     return diccionario_estratos
 
 
-def obtener_metricas_para_un_estrato(
-    df, glosa_estrato, variable_analisis, subgrupo_del_ranking
-):
+def obtener_metricas_para_un_estrato(df, glosa_estrato, variable_analisis, subgrupo_del_ranking):
     """
     Obtain metrics for a specific stratum in the DataFrame based on the analysis variable
     and ranking subgroup.
@@ -223,20 +213,18 @@ def obtener_metricas_para_un_estrato(
     var_total = f"total{sufijo_cols}"
 
     resumen = df.with_columns(
-        (pl.col("DIAG1").cumcount().over(subgrupo_del_ranking) + 1).alias(var_rank),
+        (pl.col("n_egresos").rank(method="min", descending=True).over(subgrupo_del_ranking)).alias(
+            var_rank
+        ),
         (pl.col("n_egresos").sum().over(subgrupo_del_ranking)).alias(var_total),
     )
 
-    resumen = resumen.with_columns(
-        (pl.col("n_egresos") / pl.col(var_total)).alias(var_porc)
-    )
+    resumen = resumen.with_columns((pl.col("n_egresos") / pl.col(var_total)).alias(var_porc))
 
     return resumen
 
 
-def obtener_resumen_por_estratos(
-    df, dict_estratos, variables_a_rankear, subgrupo_del_ranking
-):
+def obtener_resumen_por_estratos(df, dict_estratos, variables_a_rankear, subgrupo_del_ranking):
     """
     Obtain a summary of metrics for different strata in the DataFrame based on the provided
     dictionaries, variables to rank, and ranking subgroup.
@@ -260,9 +248,7 @@ def obtener_resumen_por_estratos(
         resultado_estrato = {}
 
         for glosa_estrato, codigos_en_estrato in dict_estratos.items():
-            df_estrato = df.filter(
-                pl.col("ESTABLECIMIENTO_SALUD").is_in(codigos_en_estrato)
-            )
+            df_estrato = df.filter(pl.col("ESTABLECIMIENTO_SALUD").is_in(codigos_en_estrato))
             resumen = obtener_metricas_para_un_estrato(
                 df_estrato, glosa_estrato, variable_analisis, subgrupo_del_ranking
             )
