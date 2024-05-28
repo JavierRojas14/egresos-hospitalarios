@@ -108,6 +108,7 @@ UNIR_EN = [
     "dias_estada_totales",
     "n_int_q",
     "n_muertos",
+    "n_pacientes_distintos",
 ]
 
 
@@ -134,6 +135,7 @@ def obtener_metricas_egresos(df, agrupar_por):
             pl.col("DIAS_ESTADA").sum().alias("dias_estada_totales"),
             pl.col("INTERV_Q").sum().alias("n_int_q"),
             pl.col("CONDICION_EGRESO").sum().alias("n_muertos"),
+            pl.col("ID_PACIENTE").n_unique().alias("n_pacientes_distintos"),
         ]
     )
 
@@ -319,6 +321,7 @@ def agregar_ranking_estratos(
         "dias_estada_totales",
         "n_int_q",
         "n_muertos",
+        "n_pacientes_distintos",
         "ranking_nacionales_n_egresos",
         "total_nacionales_n_egresos",
         "%_nacionales_n_egresos",
