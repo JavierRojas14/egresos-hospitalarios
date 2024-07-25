@@ -75,6 +75,9 @@ VALORES_NULOS = {
     "FECHA_EGRESO": "",
 }
 
+# Imputa codigo del torax
+CODIGO_TORAX = 112103
+
 
 def leer_egresos_deis(ruta_carpeta_contenedora):
     """
@@ -162,6 +165,10 @@ def agregar_categorizacion_edad(df):
     return tmp
 
 
+def filtrar_hospital_de_interes(df, codigo_hospital):
+    return df.filter(pl.col("ESTABLECIMIENTO_SALUD") == codigo_hospital)
+
+
 @click.command()
 @click.argument("input_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path())
@@ -173,8 +180,20 @@ def main(input_filepath, output_filepath):
     logger.info("making final data set from raw data")
 
     with pl.StringCache():
+        # Lee y procesa base de DEIS y filtra la base del Torax
         df_nacional = leer_egresos_deis(input_filepath).collect()
-        df_nacional.write_csv(f"{output_filepath}/egresos_procesados.csv")
+        df_hospital_de_interes = filtrar_hospital_de_interes(df_nacional, CODIGO_TORAX)
+
+        # Define la ruta a guardar ambas bases de datos
+        ruta_egresos_nacionales = f"{output_filepath}/egresos_procesados.csv"
+        ruta_egresos_hospital = f"{output_filepath}/egresos_procesados_{CODIGO_TORAX}.csv"
+
+        # Exporta bases de datos
+        print(f"> Guardando {ruta_egresos_nacionales}")
+        df_nacional.write_csv(ruta_egresos_nacionales)
+
+        print(f"> Guardando {ruta_egresos_hospital}")
+        df_hospital_de_interes.write_csv(ruta_egresos_hospital)
 
 
 if __name__ == "__main__":
