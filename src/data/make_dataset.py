@@ -185,10 +185,12 @@ def main(input_filepath, output_filepath):
         # Lee y procesa base de DEIS y filtra la base del Torax
         df_nacional = leer_egresos_deis(input_filepath).collect()
         df_hospital_de_interes = filtrar_hospital_de_interes(df_nacional, CODIGO_TORAX)
+        df_roberto = filtrar_hospital_de_interes(df_nacional, 109101)
 
         # Define la ruta a guardar ambas bases de datos
         ruta_egresos_nacionales = f"{output_filepath}/egresos_procesados.csv"
         ruta_egresos_hospital = f"{output_filepath}/egresos_procesados_{CODIGO_TORAX}.csv"
+        ruta_egresos_roberto = f"{output_filepath}/egresos_procesados_109101.csv"
 
         # Exporta bases de datos
         print(f"> Guardando {ruta_egresos_nacionales}")
@@ -196,6 +198,9 @@ def main(input_filepath, output_filepath):
 
         print(f"> Guardando {ruta_egresos_hospital}")
         df_hospital_de_interes.write_csv(ruta_egresos_hospital)
+
+        print(f"> Guardando {ruta_egresos_roberto}")
+        df_roberto.write_csv(ruta_egresos_roberto)
 
 
 if __name__ == "__main__":
