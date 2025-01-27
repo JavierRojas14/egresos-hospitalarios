@@ -171,6 +171,24 @@ def filtrar_hospital_de_interes(df, codigo_hospital):
     return df.filter(pl.col("ESTABLECIMIENTO_SALUD") == codigo_hospital)
 
 
+def leer_deis_formato_nuevo(ruta_carpeta_contenedora):
+    with pl.StringCache():
+        df = pl.scan_csv(
+            f"{ruta_carpeta_contenedora}/*.csv",
+            separator=";",
+            dtypes=DICT_VARIABLES,
+            null_values=VALORES_NULOS,
+        )
+
+    # Elimina la primera columna que no tiene nombre
+    df = df.drop(columns="")
+
+    # Cambia el nombre de la edad
+    df = df.rename({"EDAD_ANOS": "EDAD_A_OS"})
+
+    return df
+
+
 @click.command()
 @click.argument("input_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path())
@@ -180,6 +198,14 @@ def main(input_filepath, output_filepath):
     """
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
+
+    # Lee el formato de las bases que tienen una columna mas
+    ruta_nuevo_formato = f"{input_filepath}/formato_nuevo"
+    output_nuevo_formato = f"{input_filepath}/Egresos_Hospitalarios_consolidados.csv"
+    with pl.StringCache():
+        df_nuevo_formato = leer_deis_formato_nuevo(ruta_nuevo_formato).collect()
+
+    df_nuevo_formato.write_csv(output_nuevo_formato, separator=";")
 
     with pl.StringCache():
         # Lee y procesa base de DEIS y filtra la base del Torax
