@@ -28,7 +28,7 @@ DICT_VARIABLES = {
     "MODALIDAD": pl.Float64,
     "PROCEDENCIA": pl.Float64,
     "ANO_EGRESO": pl.Float64,
-    "FECHA_EGRESO": pl.Date,
+    "FECHA_EGRESO": str,
     "AREA_FUNCIONAL_EGRESO": pl.Float64,
     "DIAS_ESTADA": pl.Float64,
     "CONDICION_EGRESO": pl.Float64,
@@ -104,6 +104,8 @@ def leer_egresos_deis(ruta_carpeta_contenedora):
         df_nacional = mappear_columnas(df_nacional, MAPPING_SOCIODEMOGRAFICO)
         df_nacional = agregar_columnas_region_y_comuna(df_nacional)
         df_nacional = agregar_categorizacion_edad(df_nacional)
+        df_nacional = formatear_fecha_nacimiento_y_egreso(df_nacional)
+        df_nacional = calcular_edades_por_fechas_de_nacimiento_y_egreso(df_nacional)
 
         return df_nacional
 
@@ -167,6 +169,29 @@ def agregar_categorizacion_edad(df):
     return tmp
 
 
+def formatear_fecha_nacimiento_y_egreso(df):
+    """Formatea las fechas de nacimiento y egreso"""
+    tmp = df.with_columns(
+        [
+            pl.col("FECHA_NACIMIENTO").str.strptime(pl.Date, "%Y-%m-%d"),
+            pl.col("FECHA_EGRESO").str.strptime(pl.Date, "%Y-%m-%d"),
+        ]
+    )
+
+    return tmp
+
+
+def calcular_edades_por_fechas_de_nacimiento_y_egreso(df):
+    """Calcula la edad en dias y en anios segun las fechas de nacimiento y egreso"""
+
+    tmp = df.with_columns(
+        EDAD_CALCULADA_DIAS=(pl.col("FECHA_EGRESO") - pl.col("FECHA_NACIMIENTO")).dt.days()
+    )
+    tmp = tmp.with_columns(EDAD_CALCULADA_ANO=((pl.col("EDAD_CALCULADA_DIAS") / 365.25)))
+
+    return tmp
+
+
 def filtrar_hospital_de_interes(df, codigo_hospital):
     return df.filter(pl.col("ESTABLECIMIENTO_SALUD") == codigo_hospital)
 
@@ -199,13 +224,13 @@ def main(input_filepath, output_filepath):
     logger = logging.getLogger(__name__)
     logger.info("making final data set from raw data")
 
-    # Lee el formato de las bases que tienen una columna mas
-    ruta_nuevo_formato = f"{input_filepath}/formato_nuevo"
-    output_nuevo_formato = f"{input_filepath}/Egresos_Hospitalarios_consolidados.csv"
-    with pl.StringCache():
-        df_nuevo_formato = leer_deis_formato_nuevo(ruta_nuevo_formato).collect()
+    # # Lee el formato de las bases que tienen una columna mas
+    # ruta_nuevo_formato = f"{input_filepath}/formato_nuevo"
+    # output_nuevo_formato = f"{input_filepath}/Egresos_Hospitalarios_consolidados.csv"
+    # with pl.StringCache():
+    #     df_nuevo_formato = leer_deis_formato_nuevo(ruta_nuevo_formato).collect()
 
-    df_nuevo_formato.write_csv(output_nuevo_formato, separator=";")
+    # df_nuevo_formato.write_csv(output_nuevo_formato, separator=";")
 
     with pl.StringCache():
         # Lee y procesa base de DEIS y filtra la base del Torax
